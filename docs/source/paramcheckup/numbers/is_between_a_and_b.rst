@@ -1,7 +1,7 @@
 .. is_between_a_and_b:
 
-between_a_and_b
-===============
+is_between_a_and_b
+==================
 
 
 

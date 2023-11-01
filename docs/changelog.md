@@ -10,7 +10,7 @@
 #### Module numbers
 - Added ``is_lower_than`` function (28/10/2023);
 - Added ``is_greater_than`` function (28/10/2023);
-- Added ``between_a_and_b`` function (27/10/2023);
+- Added ``is_between_a_and_b`` function (27/10/2023);
 - Added ``is_float_or_int`` function (27/10/2023);
 - Added ``is_negative`` function (27/10/2023);
 
