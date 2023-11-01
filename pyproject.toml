@@ -29,17 +29,6 @@ dependencies = [
     "matplotlib>=3.7.1",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "black",
-    "flake8",
-]
-docs = [
-    "numpydoc",
-    "Sphinx",
-    "pydata_sphinx_theme==0.14.2",
-]
-
 [project.urls]
 Source = "https://github.com/anderson-canteli/paramcheckup"
 Docs = "https://paramcheckup.readthedocs.io/en/latest/"
