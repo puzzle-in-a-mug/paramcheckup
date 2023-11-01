@@ -38,7 +38,7 @@ def t_test(x_data, mu, alpha):
     return tcalc, t_critical, p_value, conclusion
 ```
 
-The ``t_test`` function strongly depends on the ``x_data`` parameter being a one-dimensional ``NumpyArray``. The ``types.is_numpy(value, param_name, func_name)`` function can checks whether this is True:
+The ``t_test`` function strongly depends on the ``x_data`` parameter being a one-dimensional ``NumpyArray``. The ``types.is_numpy(value, param_name, func_name)`` function can checks whether this is ``True``:
 
 
 
@@ -66,7 +66,7 @@ print(result)
 (-31.80244895786038, 4.302652729911275, 0.0009872686643235262, 'Reject H0')
 ```
 
-However, if you use a ``list`` instead of ``NumpyArray``, an ``TypeError` will be raised indicating what the error is:
+However, if you use a ``list`` instead of ``NumpyArray``, an ``TypeError`` will be raised indicating what the error is:
 
 ```python
 x = [1.24, 1.3, 1.11]
