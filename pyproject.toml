@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paramcheckup"
-version = "0.1.0"
+version = "0.1.1"
 description = "Chekup the parameter type for functions"
 authors = [
     {name = "Anderson Marcos Dias Canteli", email = "andersonmdcanteli@gmail.com"},
