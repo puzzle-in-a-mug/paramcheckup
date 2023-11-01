@@ -15,7 +15,7 @@ keywords = ["type", "check", "warnings"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",    
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
@@ -35,4 +35,4 @@ Docs = "https://paramcheckup.readthedocs.io/en/latest/"
 
 [tool.setuptools.packages.find]
 # All the following settings are optional:
-include = ["paramcheckup.paramcheckup*", "paramcheckup.tests*"]  # empty by default
+include = ["paramcheckup*",]  # empty by default
