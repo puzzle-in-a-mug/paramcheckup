@@ -10,7 +10,9 @@ This package has a collection of functions that check whether the parameter rece
 
 ## Install
 
-> pip install paramcheckup
+```
+pip install paramcheckup
+```
 
 
 
