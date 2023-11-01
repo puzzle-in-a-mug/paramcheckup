@@ -18,7 +18,7 @@ import toml
 
 ### FUNCTION IMPORT ###
 import paramcheckup
-
+from packaging import version
 
 os.system("cls")
 
@@ -31,7 +31,10 @@ class Test_version(unittest.TestCase):
     def test_version(self):
         doc_version = paramcheckup.__version__
         pyproject_version = toml.load("pyproject.toml")["project"]["version"]
-        self.assertEqual(doc_version, pyproject_version, msg="versions doesn't match")
+        self.assertTrue(
+            version.parse(doc_version) == version.parse(pyproject_version),
+            msg="versions doesn't match",
+        )
 
     def test_author(self):
         doc_author = paramcheckup.__author__
