@@ -38,7 +38,6 @@ class Test_version(unittest.TestCase):
 
     def test_next_version(self):
         pyproject_version = toml.load("pyproject.toml")["project"]["version"]
-        print(version.parse(pyproject_version), version.parse(self.next_version))
         self.assertTrue(
             version.parse(pyproject_version) < version.parse(self.next_version),
             msg="current version greater or equal than future version",
