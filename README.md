@@ -1,4 +1,4 @@
-<img src="/docs/_static/favicon-180x180.png" align="right" />
+<img src="docs/_static/logo.png" align="right" />
 
 # paramcheckup
 
