@@ -63,7 +63,7 @@ If we use the function passing a ``list`` instead of a ``NumpyArray``, an ``Type
 
 ## License
 
-- [BSD 3-Clause License]("https://github.com/puzzle-in-a-mug/paramcheckup/blob/main/LICENSE")
+- [BSD 3-Clause License](https://github.com/puzzle-in-a-mug/paramcheckup/blob/main/LICENSE)
 
 
 
