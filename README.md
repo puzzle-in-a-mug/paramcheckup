@@ -1,2 +1,2 @@
 # paramcheckup
-a package to check param inputs with functions 
+repository for package that contains functions to checn different types of inputs for functions
