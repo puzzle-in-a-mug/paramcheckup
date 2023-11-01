@@ -97,7 +97,7 @@ html_theme_options = {
     "logo": {
         "alt_text": "paramcheckup documentation - Home",
         "image_light": "_static/logo.png",
-        "image_dark": "_static/logo.png",
+        "image_dark": "_static/logo-dark.png",
     },
     "announcement": "This project is in alpha phase and can be changed at any time.",
     "navigation_with_keys": "false",
