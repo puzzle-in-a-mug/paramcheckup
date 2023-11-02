@@ -220,7 +220,7 @@ def is_float(value, param_name, func_name):
     Examples
     --------
     >>> from paramcheckup import types
-    >>> types(checkup.is_float(0.05, "alpha", "ttest"))
+    >>> print(types.is_float(0.05, "alpha", "ttest"))
     True
 
 
