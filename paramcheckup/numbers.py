@@ -667,17 +667,37 @@ def is_negative(number, param_name, kind, kind_name, stacklevel=4, error=True):
     return True
 
 
-def is_positive(value, param_name, func_name):
-    """This function checks whether a variable *value* is a positive number (greater than zero, not included).
+@docs.docstring_parameter(
+    number=docs.NUMBER["type"],
+    number_desc=docs.NUMBER["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_positive(number, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether `number` is a positive number (lower than zero, not included).
 
     Parameters
     ----------
-    value : int or float
-        The number to whether if it is positive;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {number}
+        {number_desc}
+    {param_name}
+        {param_name_desc}
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
@@ -689,22 +709,53 @@ def is_positive(value, param_name, func_name):
     Examples
     --------
     >>> from paramcheckup import numbers
-    >>> c_zero = 10
-    >>> print(numbers.is_positive(c_zero, "inlet_concentration", "bed_capacity"))
+    >>> result = numbers.is_positive(
+        number=3.1416,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    >>> print(result)
     True
 
+
     >>> from paramcheckup import numbers
-    >>> c_zero = -10
-    >>> numbers.is_positive(c_zero, "inlet_concentration", "bed_capacity")
-    The parameter 'inlet_concentration' in function 'bed_capacity' must be a positive number, but it is equal to '-10'.
+    >>> result = numbers.is_positive(
+        number=0,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `hypotenuse` in function `pitagoras` must be a positive number, but it is equal to `0`.
+
+
+    >>> from paramcheckup import numbers
+    >>> result = numbers.is_positive(
+        number=-273.15,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `hypotenuse` in function `pitagoras` must be a positive number, but it is equal to `-273.15`.
+
 
     """
-    if value <= 0:
-        try:
-            raise ValueError("NotPositiveError")
-        except ValueError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be a positive number, but it is equal to '{value}'.\n"
-            )
-            raise
+    if number <= 0:
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` must be a positive number, but it is equal to `{number}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("NotPositiveError")
+            except ValueError:
+                raise
     return True
