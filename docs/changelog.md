@@ -5,8 +5,9 @@
 
 ### Updates
 #### Module numbers
-- ``is_between_a_and_b`` function (14/11/2023);
+- ``is_lower_than`` function (14/11/2023);
 - ``is_greater_than`` function (14/11/2023);
+- ``is_between_a_and_b`` function (14/11/2023);
 
 
 ## v 1.0.0 (01/11/2023)
