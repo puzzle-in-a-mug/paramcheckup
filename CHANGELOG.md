@@ -4,6 +4,10 @@
 ## v 1.0.1 (14/11/2023)
 
 ### Updates
+
+#### Module parameters
+- ``param_options`` function (14/11/2023);
+
 #### Module numbers
 - ``is_positive`` function (14/11/2023);
 - ``is_negative`` function (14/11/2023);
