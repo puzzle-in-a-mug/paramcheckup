@@ -3,7 +3,9 @@
 
 ## v 1.0.1 (14/11/2023)
 
-
+### Updates
+#### Module numbers
+- ``is_greater_than`` function (14/11/2023);
 
 ### Fix
 
