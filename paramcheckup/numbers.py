@@ -475,53 +475,100 @@ def is_lower_than(
     return True
 
 
-def is_float_or_int(value, param_name, func_name):
-    """This function checks whether a variable *value* is of the *int* or *float* type.
+@docs.docstring_parameter(
+    number=docs.NUMBER["type"],
+    number_desc=docs.NUMBER["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_float_or_int(number, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable `value` is of the `int` or `float` type.
+
 
     Parameters
     ----------
-    value : any type
-        The variable that is tested as being of *int* or *float* type;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {number}
+        {number_desc}
+    {param_name}
+        {param_name_desc}
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
-    True
-        If variable *value* **IS** of the *int* or *float* type;
-    TypeError
-        If variable *value* is **NOT** of the *int* or *float* type;
+    Output : True
+        If variable `number` **IS** of the `int` or `float` type;
+    raises : TypeError
+        If variable `number` is **NOT** of the `int` or `float` type;
+
 
     Notes
     -----
-    The following types are considered to be *True*:
+    The following types are considered to be `True`:
 
-    * *int*;
-    * *np.uint*;
-    * *np.integer*;
-    * *float*;
-    * *np.floating*;
+    * `int`;
+    * `float`;
+    * `np.floating`;
+    * `np.integer`;
+    * `np.uint`;
+
 
     Examples
     --------
-    >>> from paramcheckup import numbers
-    >>> print(numbers.is_float_or_int(2, param_name="hypotenuse", func_name="pitagoras"))
-    True
 
     >>> from paramcheckup import numbers
-    >>> print(numbers.is_float_or_int("2", param_name="hypotenuse", func_name="pitagoras"))
-    The parameter 'hypotenuse' in function 'pitagoras' must be of type *int* or *float*, but its type is *str*.
+    >>> result = numbers.is_float_or_int(
+        number=2,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=True,
+    )
+    >>>  print(result)
+    True
+
+
+    >>> from paramcheckup import numbers
+    >>> result = numbers.is_float_or_int(
+        number="2",
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `hypotenuse` in function `pitagoras` must be of type `int` or `float`, but its type is `str`.
+
+
     """
-    if isinstance(value, (int, np.uint, np.integer, float, np.floating)) is False:
-        try:
-            raise TypeError("NotNumberError")
-        except TypeError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be of type *int* or *float*, but its type is *{type(value).__name__}*.\n"
-            )
-            raise
+    if isinstance(number, (int, np.uint, np.integer, float, np.floating)) is False:
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` must be of type `int` or `float`, but its type is `{type(number).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError("NotNumberError")
+            except TypeError:
+                raise
     else:
         return True
 
