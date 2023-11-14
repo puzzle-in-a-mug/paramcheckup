@@ -54,36 +54,40 @@ import numpy as np
 
 
 ##### FUNCTIONS #####
-def is_between_a_and_b(value, a, b, param_name, func_name, inclusive=True):
-    """This function checks whether a number (*value*) is within the range (open or closed) *a* and *b*.
+def is_between_a_and_b(
+    number, lower, upper, param_name, kind, kind_name, inclusive=True
+):
+    """This function checks whether a number (`number`) is within the range (open or closed) `lower` and `upper`.
 
     Parameters
     ----------
-    value : int or float
+    number : int or float
         The number that needs to be checked;
-    a : int or float
-        The lower bound
-    b : int or float
-        The upper bound
+    lower : int or float
+        The lower bound;
+    upper : int or float
+        The upper bound;
     param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+        The name of the parameter that received the variable `number`;
+    kind : str
+        The object where `param_name` is applied (function, method, class, etc.)
+    kind_name : str
+        The name of the object that utilizes the `param_name`;
     inclusive : bool, optional
-        Specify whether the boundaries should be open (*False*) or closed (*True*, default);
+        Specify whether the boundaries should be open (`False`) or closed (`True`, default);
 
 
     Notes
     -----
-    If *a* is greater than *b*, the function automatically inverts the values.
+    If `lower` is greater than `upper`, the function automatically inverts the values to make mathematical sense.
 
 
     Returns
     -------
     output : True
-        If value **IN** [a;b] (or (a;b)) interval;
+        If value **IN** `[a;b]` (or `(a;b)`) interval;
     raises : ValueError
-        If value **NOT** in [a;b] (or (a;b)) interval;
+        If value **NOT** in `[a;b]` (or `(a;b)`) interval;
 
     Examples
     --------
@@ -110,26 +114,26 @@ def is_between_a_and_b(value, a, b, param_name, func_name, inclusive=True):
     The value of parameter 'alpha' in function 'ttest' must be within the range of 0 < value < 1, but it is '0.0'.
 
     """
-    values = [a, b]
+    values = [lower, upper]
     lower = min(values)
     upper = max(values)
 
     if inclusive is True:
-        if (lower <= value <= upper) is False:
+        if (lower <= number <= upper) is False:
             try:
                 raise ValueError("OutofBoundsError")
             except ValueError:
                 print(
-                    f"The value of parameter '{param_name}' in function '{func_name}' must be within the range of {lower} <= value <= {upper}, but it is '{value}'.\n"
+                    f"The value of '{param_name}' in {kind} '{kind_name}' must be within the range of {lower} <= value <= {upper}, but it is '{number}'.\n"
                 )
                 raise
     else:
-        if (lower < value < upper) is False:
+        if (lower < number < upper) is False:
             try:
                 raise ValueError("OutofBoundsError")
             except ValueError:
                 print(
-                    f"The value of parameter '{param_name}' in function '{func_name}' must be within the range of {lower} < value < {upper}, but it is '{value}'.\n"
+                    f"The value of '{param_name}' in {kind}  '{kind_name}' must be within the range of {lower} < value < {upper}, but it is '{number}'.\n"
                 )
                 raise
     return True
