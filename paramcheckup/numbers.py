@@ -260,9 +260,9 @@ def is_greater_than(
     Returns
     -------
     output : True
-        If `number` **IS** greater than lower (or `number` **IS** equal/greater than lower);
+        If `number` **IS** greater than lower (or `number` **IS** equal/greater than `lower`);
     raises : ValueError
-        If `number` is **NOT** greater than lower (or `number` is **NOT** equal/greater than lower);
+        If `number` is **NOT** greater than lower (or `number` is **NOT** equal/greater than `lower`);
 
     Examples
     --------
@@ -340,75 +340,138 @@ def is_greater_than(
     return True
 
 
-def is_lower_than(value, upper, param_name, func_name, inclusive=True):
-    """This function checks if a *value* is equal or lower than *upper*.
+@docs.docstring_parameter(
+    number=docs.NUMBER["type"],
+    number_desc=docs.NUMBER["description"],
+    upper=docs.UPPER["type"],
+    upper_desc=docs.UPPER["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    inclusive=docs.INCLUSIVE["type"],
+    inclusive_desc=docs.INCLUSIVE["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_lower_than(
+    number,
+    upper,
+    param_name,
+    kind,
+    kind_name,
+    inclusive=True,
+    stacklevel=4,
+    error=True,
+):
+    """This function checks if a `number` is equal (open or closed) or lower than `upper`.
 
     Parameters
     ----------
-    value : int or float
-        The number that needs to be checked;
-    upper : int or float
-        The upper bound
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
-    inclusive : bool, optional
-        Specify whether the boundaries should be open (*False*) or closed (*True*, default);
+    {number}
+        {number_desc}
+    {upper}
+        {upper_desc}
+    {param_name}
+        {param_name_desc} `number`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {inclusive}
+        {inclusive_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
     output : True
-        If value < upper (or value <= upper);
+        If `numer` **IS** lower than `upper` (or `number` **IS** lower/equal than `upper`);
     raises : ValueError
-        If value >= upper (or value > upper);
+        If `numer` is **NOT** lower than `upper` (or `number` is **NOT** lower/equal than `upper`);
+
 
     Examples
     --------
+
     >>> from paramcheckup import numbers
-    >>> alpha = 0.05
-    >>> upper = 1
-    >>> result = numbers.is_lower_than(alpha, upper, "alpha", "ttest", inclusive=True)
-    >>> print(result)
+    >>> output = numbers.is_lower_than(
+        number=0.05,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        inclusive=True,
+        stacklevel=3,
+        error=False,
+    )
+    >>> print(output)
     True
 
-    >>> from paramcheckup import numbers
-    >>> alpha = 1.05
-    >>> upper = 1
-    >>> result = numbers.is_lower_than(alpha, upper, "alpha", "ttest", inclusive=True)
-    The value of the parameter 'alpha' in function 'ttest' must be equal or lower than '1', but it is '1.05'.
 
     >>> from paramcheckup import numbers
-    >>> alpha = 0.
-    >>> upper = 0
-    >>> result = numbers.is_lower_than(alpha, upper, "alpha", "ttest", inclusive=False)
-    >>> print(result)
-    True
+    >>> output = numbers.is_lower_than(
+        number=1,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        inclusive=False,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The value of `alpha` in function `ttest` must be lower than `1` (`alpha < 1`), but it is `1`.
+
 
     >>> from paramcheckup import numbers
-    >>> alpha = 0.05
-    >>> upper = 0
-    >>> result = numbers.is_lower_than(alpha, upper, "alpha", "ttest", inclusive=False)
-    The value of the parameter 'alpha' in function 'ttest' must be lower than '0', but it is '0.05'.
+    >>> output = numbers.is_lower_than(
+        number=1.05,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        inclusive=True,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The value of `alpha` in function `ttest` must be equal or lower than `1` (`alpha <= 1`), but it is `1.05`.
+
+
+
     """
     if inclusive:
-        if value >= upper:
-            try:
-                raise ValueError("OutofBoundsError")
-            except ValueError:
-                print(
-                    f"The value of the parameter '{param_name}' in function '{func_name}' must be equal or lower than '{upper}', but it is '{value}'.\n"
-                )
-                raise
+        if number > upper:
+            user_warning(
+                f"The value of `{param_name}` in {kind} `{kind_name}` must be equal or lower than `{upper}` (`{param_name} <= {upper}`), but it is `{number}`.\n",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("OutofBoundsError")
+                except ValueError:
+                    raise
     else:
-        if value > upper:
-            try:
-                raise ValueError("OutofBoundsError")
-            except ValueError:
-                print(
-                    f"The value of the parameter '{param_name}' in function '{func_name}' must be lower than '{upper}', but it is '{value}'.\n"
-                )
-                raise
+        if number >= upper:
+            user_warning(
+                f"The value of `{param_name}` in {kind} `{kind_name}` must be lower than `{upper}` (`{param_name} < {upper}`), but it is `{number}`.\n",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("OutofBoundsError")
+                except ValueError:
+                    raise
     return True
 
 
