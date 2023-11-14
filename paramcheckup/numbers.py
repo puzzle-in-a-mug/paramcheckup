@@ -46,6 +46,7 @@ import numpy as np
 
 ### home made ###
 from .utils import user_warning
+from . import documentation as docs
 
 ##### CONSTANTS #####
 
@@ -54,6 +55,26 @@ from .utils import user_warning
 
 
 ##### FUNCTIONS #####
+@docs.docstring_parameter(
+    number=docs.NUMBER["type"],
+    number_desc=docs.NUMBER["description"],
+    lower=docs.LOWER["type"],
+    lower_desc=docs.LOWER["description"],
+    upper=docs.UPPER["type"],
+    upper_desc=docs.UPPER["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    inclusive=docs.INCLUSIVE["type"],
+    inclusive_desc=docs.INCLUSIVE["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
 def is_between_a_and_b(
     number,
     lower,
@@ -63,26 +84,30 @@ def is_between_a_and_b(
     kind_name,
     inclusive=True,
     stacklevel=4,
-    error=True,
+    error=False,
 ):
     """This function checks whether a number (`number`) is within the range (open or closed) `lower` and `upper`.
 
     Parameters
     ----------
-    number : int or float
-        The number that needs to be checked;
-    lower : int or float
-        The lower bound;
-    upper : int or float
-        The upper bound;
-    param_name : str
-        The name of the parameter that received the variable `number`;
-    kind : str
-        The object where `param_name` is applied (function, method, class, etc.)
-    kind_name : str
-        The name of the object that utilizes the `param_name`;
-    inclusive : bool, optional
-        Specify whether the boundaries should be open (`False`) or closed (`True`, default);
+    {number}
+        {number_desc}
+    {lower}
+        {lower_desc}
+    {upper}
+        {upper_desc}
+    {param_name}
+        {param_name_desc} `number`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {inclusive}
+        {inclusive_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
 
     Notes
@@ -100,27 +125,58 @@ def is_between_a_and_b(
 
     Examples
     --------
+
+    Checking if the significance level is a number between 0 and 1:
+
     >>> from paramcheckup import numbers
-    >>> alpha = 0.0
-    >>> lower = 0
-    >>> upper = 1
-    >>> result = numbers.is_between_a_and_b(alpha, lower, upper, "alpha", "ttest")
-    >>> print(result)
+    >>> output = numbers.is_between_a_and_b(
+        number=0,
+        lower=0,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    >>> print(output)
     True
 
-    >>> from paramcheckup import numbers
-    >>> alpha = -0.35
-    >>> lower = 0
-    >>> upper = 1
-    >>> result = numbers.is_between_a_and_b(alpha, lower, upper, "alpha", "ttest")
-    The value of parameter 'alpha' in function 'ttest' must be within the range of 0 <= value <= 1, but it is '-0.35'.
+
+    In some cases the lower and upper limits must be opened. To disallow closed ranges, simply pass parameter `inclusive=False`:
+
 
     >>> from paramcheckup import numbers
-    >>> alpha = 0.0
-    >>> lower = 0
-    >>> upper = 1
-    >>> result = numbers.is_between_a_and_b(alpha, lower, upper, "alpha", "ttest", inclusive=False)
-    The value of parameter 'alpha' in function 'ttest' must be within the range of 0 < value < 1, but it is '0.0'.
+    >>> output = numbers.is_between_a_and_b(
+        number=0.0,
+        lower=0,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        inclusive=False,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 3: The value of 'alpha' in function  'ttest' must be within the range of 0 < value < 1, but it is '0'.
+
+
+    Another example with an error being reported, but with `inclusive=True`:
+
+
+    >>> from paramcheckup import numbers
+    >>> output = numbers.is_between_a_and_b(
+        number=-0.35,
+        lower=0,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 3: The value of 'alpha' in function 'ttest' must be within the range of 0 <= value <= 1, but it is '-0.35'.
+
 
     """
     values = [lower, upper]
@@ -142,13 +198,18 @@ def is_between_a_and_b(
                     raise
     else:
         if (lower < number < upper) is False:
-            try:
-                raise ValueError("OutofBoundsError")
-            except ValueError:
-                print(
-                    f"The value of '{param_name}' in {kind}  '{kind_name}' must be within the range of {lower} < value < {upper}, but it is '{number}'.\n"
-                )
-                raise
+            user_warning(
+                f"The value of '{param_name}' in {kind}  '{kind_name}' must be within the range of {lower} < value < {upper}, but it is '{number}'.\n",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("OutofBoundsError")
+                except ValueError:
+                    print()
+                    raise
     return True
 
 
