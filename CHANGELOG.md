@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v 1.0.1 (14/11/2023)
+
+
+
+### Fix
+#### Module numbers
+- Fixed bug in ``is_greater_than`` function (14/11/2023);
+
+
 ## v 1.0.0 (01/11/2023)
 
 
