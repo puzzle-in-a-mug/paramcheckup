@@ -158,7 +158,7 @@ def is_between_a_and_b(
         stacklevel=3,
         error=False,
     )
-    UserWarning at line 3: The value of 'alpha' in function  'ttest' must be within the range of 0 < value < 1, but it is '0'.
+    UserWarning at line 3: The value of 'alpha' in function 'ttest' must be within the range of 0 < value < 1, but it is '0'.
 
 
     Another example with an error being reported, but with `inclusive=True`:
@@ -199,7 +199,7 @@ def is_between_a_and_b(
     else:
         if (lower < number < upper) is False:
             user_warning(
-                f"The value of '{param_name}' in {kind}  '{kind_name}' must be within the range of {lower} < value < {upper}, but it is '{number}'.\n",
+                f"The value of '{param_name}' in {kind} '{kind_name}' must be within the range of {lower} < value < {upper}, but it is '{number}'.\n",
                 stacklevel=stacklevel,
             )
             if error is False:
