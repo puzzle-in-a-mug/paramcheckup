@@ -573,45 +573,97 @@ def is_float_or_int(number, param_name, kind, kind_name, stacklevel=4, error=Tru
         return True
 
 
-def is_negative(value, param_name, func_name):
-    """This function checks whether a variable *value* is a negative number (lower than zero, not included).
+@docs.docstring_parameter(
+    number=docs.NUMBER["type"],
+    number_desc=docs.NUMBER["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_negative(number, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether `number` is a negative number (lower than zero, not included).
 
     Parameters
     ----------
-    value : int or float
-        The number to whether if it is negative;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {number}
+        {number_desc}
+    {param_name}
+        {param_name_desc}
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
-    True
-        If variable *value* **IS** negative;
+    output : True
+        If `number` **IS** negative;
     ValueError
-        If variable *value* is **NOT** negative;
+        If `number` is **NOT** negative;
 
     Examples
     --------
     >>> from paramcheckup import numbers
-    >>> value = -10
-    >>> print(numbers.is_negative(value, "parameter", "my_func"))
+    >>> result = numbers.is_negative(
+        number=-10,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
     True
 
+
     >>> from paramcheckup import numbers
-    >>> value = 10
-    >>> numbers.is_negative(value, "parameter", "my_func")
-    The parameter 'parameter' in function 'my_func' must be a negative number, but it is equal to '10'.
+    >>> result = numbers.is_negative(
+        number=0,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `hypotenuse` in function `pitagoras` must be a negative number, but it is equal to `0`.
+
+
+    >>> from paramcheckup import numbers
+    >>> result = numbers.is_negative(
+        number=3.1416,
+        param_name="hypotenuse",
+        kind="function",
+        kind_name="pitagoras",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `hypotenuse` in function `pitagoras` must be a negative number, but it is equal to `3.1416`.
+
+
     """
-    if value >= 0:
-        try:
-            raise ValueError("NotNegativeError")
-        except ValueError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be a negative number, but it is equal to '{value}'.\n"
-            )
-            raise
+    if number >= 0:
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` must be a negative number, but it is equal to `{number}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("NotNegativeError")
+            except ValueError:
+                raise
     return True
 
 
