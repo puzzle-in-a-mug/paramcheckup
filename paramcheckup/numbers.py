@@ -189,7 +189,7 @@ def is_greater_than(value, lower, param_name, func_name, inclusive=True):
     """
 
     if inclusive:
-        if value <= lower:
+        if value < lower:
             try:
                 raise ValueError("OutofBoundsError")
             except ValueError:
@@ -198,7 +198,7 @@ def is_greater_than(value, lower, param_name, func_name, inclusive=True):
                 )
                 raise
     else:
-        if value < lower:
+        if value <= lower:
             try:
                 raise ValueError("OutofBoundsError")
             except ValueError:
