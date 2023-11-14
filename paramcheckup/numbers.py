@@ -84,7 +84,7 @@ def is_between_a_and_b(
     kind_name,
     inclusive=True,
     stacklevel=4,
-    error=False,
+    error=True,
 ):
     """This function checks whether a number (`number`) is within the range (open or closed) `lower` and `upper`.
 
