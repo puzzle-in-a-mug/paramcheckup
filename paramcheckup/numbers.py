@@ -39,13 +39,13 @@ Last update: October 25, 2023
 ##### IMPORTS #####
 
 ### Standard ###
-
+import sys
 
 ### Third part ###
 import numpy as np
 
 ### home made ###
-
+from .utils import user_warning
 
 ##### CONSTANTS #####
 
@@ -55,7 +55,15 @@ import numpy as np
 
 ##### FUNCTIONS #####
 def is_between_a_and_b(
-    number, lower, upper, param_name, kind, kind_name, inclusive=True
+    number,
+    lower,
+    upper,
+    param_name,
+    kind,
+    kind_name,
+    inclusive=True,
+    stacklevel=4,
+    error=True,
 ):
     """This function checks whether a number (`number`) is within the range (open or closed) `lower` and `upper`.
 
@@ -89,6 +97,7 @@ def is_between_a_and_b(
     raises : ValueError
         If value **NOT** in `[a;b]` (or `(a;b)`) interval;
 
+
     Examples
     --------
     >>> from paramcheckup import numbers
@@ -120,13 +129,17 @@ def is_between_a_and_b(
 
     if inclusive is True:
         if (lower <= number <= upper) is False:
-            try:
-                raise ValueError("OutofBoundsError")
-            except ValueError:
-                print(
-                    f"The value of '{param_name}' in {kind} '{kind_name}' must be within the range of {lower} <= value <= {upper}, but it is '{number}'.\n"
-                )
-                raise
+            user_warning(
+                f"The value of '{param_name}' in {kind} '{kind_name}' must be within the range of {lower} <= value <= {upper}, but it is '{number}'.\n",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("OutofBoundsError")
+                except ValueError:
+                    raise
     else:
         if (lower < number < upper) is False:
             try:
