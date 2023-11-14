@@ -5,6 +5,8 @@
 
 ### Updates
 #### Module numbers
+
+- ``is_negative`` function (14/11/2023);
 - ``is_float_or_int`` function (14/11/2023);
 - ``is_lower_than`` function (14/11/2023);
 - ``is_greater_than`` function (14/11/2023);
