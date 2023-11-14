@@ -6,6 +6,7 @@
 
 
 ### Fix
+
 #### Module numbers
 - Fixed bug in ``is_greater_than`` function (14/11/2023);
 
