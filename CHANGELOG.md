@@ -5,6 +5,11 @@
 
 ### Updates
 
+
+#### Module numpy_arrays
+
+- ``cast_to_ndim`` was renamed as ``cast`` (15/11/2023);
+
 #### Module data_frames
 - ``column_name`` function (15/11/2023);
 - ``is_empty`` function (15/11/2023);
