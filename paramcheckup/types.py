@@ -406,55 +406,94 @@ def is_float(value, param_name, kind, kind_name, stacklevel=4, error=True):
         return True
 
 
-def is_int(value, param_name, func_name):
-    """This function checks whether a variable *value* is of the *int* type.
+@docs.docstring_parameter(
+    value=docs.VALUE["type"],
+    value_desc=docs.VALUE["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_int(value, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable `value` is of the `int` type.
 
     Parameters
     ----------
-    value : any type
-        The variable that is tested as being of *int* type;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
-
+    {value}
+        {value_desc} `int`;
+    {param_name}
+        {param_name_desc} `value`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
-    True
-        If variable *value* **IS** of the *int* type;
-    TypeError
-        If variable *value* is **NOT** of the *int* type;
+    output : True
+        If variable `value` **IS** of the `int` type;
+    raises : TypeError
+        If variable `value` is **NOT** of the `int` type;
 
 
     Notes
     -----
-    The following types are considered to be *True*:
+    The following types are considered to be `True`:
 
-    * *int*;
-    * *np.uint*;
-    * *np.integer*;
+    * `int`;
+    * `np.uint`;
+    * `np.integer`;
 
 
     Examples
     --------
     >>> from paramcheckup import types
-    >>> print(types.is_int(5, "tcalc", "ttest"))
+    >>> result = types.is_int(
+        value=5,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
     True
 
+
     >>> from paramcheckup import types
-    >>> print(types.is_int(5.0, "tcalc", "ttest"))
-    The parameter 'tcalc' in function 'ttest' must be of type *int*, but its type is *float*.
+    >>> result = types.is_int(
+        value=0.05,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The parameter `alpha` in function `ttest` must be of type `int`, but its type is `float`.
 
     """
     if isinstance(value, (int, np.uint, np.integer)) is False:
-        try:
-            raise TypeError("NotIntError")
-        except TypeError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be of type *int*, but its type is *{type(value).__name__}*.\n"
-            )
-            raise
+        user_warning(
+            f"The parameter `{param_name}` in {kind} `{kind_name}` must be of type `int`, but its type is `{type(value).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError("NotIntError")
+            except TypeError:
+                raise
     return True
 
 
