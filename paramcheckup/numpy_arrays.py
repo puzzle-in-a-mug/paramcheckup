@@ -3,13 +3,13 @@
 
 ## Functions WITH TESTS ###
 
-- empty_array(arr, param_name, func_name)
-- greater_than_n(array, param_name, func_name, minimum=3, inclusive=True)
-- matching_size(array_a, param_name_a, array_b, param_name_b, func_name)
-- n_dimensions(arr, param_name, func_name, n_dimensions)
+- empty_array(array, param_name, kind, kind_name, stacklevel=4, error=True)
+- size_is_greater_than_lower(array, param_name, kind, kind_name, lower, inclusive=True, stacklevel=4, error=True)
+- matching_size(arrays, param_names, kind, kind_name, stacklevel=4, error=True)
+n_dimensions(array, param_name, ndim, kind, kind_name, stacklevel=4, error=True)
 
 ## Functions WITH some TESTS (needs improvements) ###
-- cast_to_ndim(array, param_name, func_name, ndim=1) (first error does not have a test)
+- cast(array, param_name, kind, kind_name, ndim, stacklevel=4, error=True) (first error does not have a test)
 
 ## Functions WITHOUT tests ###
 
@@ -19,15 +19,11 @@
 
 
 
-
-
-
-
 Author: Anderson Marcos Dias Canteli <andersonmdcanteli@gmail.com>
 
 Created: October 26, 2023.
 
-Last update: October 26, 2023
+Last update: November 15, 2023
 
 
 
