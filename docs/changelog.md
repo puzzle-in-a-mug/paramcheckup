@@ -7,6 +7,7 @@
 
 #### Module numpy_arrays
 
+- ``empty_array`` function (15/11/2023);
 - ``cast_to_ndim`` was renamed as ``cast`` (15/11/2023);
 
 
