@@ -408,37 +408,68 @@ def size_is_greater_than_lower(
     return True
 
 
-def matching_size(array_a, param_name_a, array_b, param_name_b, func_name):
-    """This function checks whether the size of :doc:`numpy array <numpy:reference/generated/numpy.array>` *array_a* is equal to the size of :doc:`numpy array <numpy:reference/generated/numpy.array>` *array_b*.
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    lower=docs.LOWER["type"],
+    lower_desc=docs.LOWER["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def matching_size(
+    arrays,
+    param_names,
+    kind,
+    kind_name,
+    stacklevel=4,
+    error=True,
+):
+    """This function checks if the size of multiple arrays are equal;
 
     Parameters
     ----------
-    array_a :  numpy array
-        One dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`;
-    param_name_a : str
-        The name of the parameter that received the variable *array_a*;
-    array_b :  *numpy array*
-        One dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`
-    param_name_b : str
-        The name of the parameter that received the variable *array_b*;
-    func_name : str
-        The name of the function that utilizes the arrays *param_name_a* and *param_name_b*;
+    arrays :  list of one dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`;
+        A `list` of one dimension :doc:`numpy array <numpy:reference/generated/numpy.array>` that must have the same size;
+    param_names : list of str
+        A `list` with the name of each parameter that received the arrays contained in `arrays`
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
 
     Returns
     -------
-    True
-        If the size of the array *array_a* **IS** equal to the size of  the array *array_b*;
+    output : True
+        If the size of all arrays are the same;
     ValueError
-        If the size of the array *array_a* is **NOT** equal to the size of  the array *array_b*;
+        If at least one array has a different size than the others;
 
     Examples
     --------
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
     >>> x_data = np.array([1, 2, 3, 4, 5, 6])
-    >>> y_data = np.array([1, 4, 9, 16, 25, 36])
-    >>> print(numpy_arrays.matching_size(x_data, "time", y_data, "concentration", "regression"))
+    >>> z_data = np.array([1, 4, 9, 16, 25, 36])
+    >>> output = numpy_arrays.matching_size(
+        arrays=[x_data, z_data],
+        param_names=["concentration", "absorbance"],
+        kind="function",
+        kind_name="calibration",
+        stacklevel=3,
+        error=False,
+    )
+    >>> print(output)
     True
 
 
@@ -446,18 +477,47 @@ def matching_size(array_a, param_name_a, array_b, param_name_b, func_name):
     >>> import numpy as np
     >>> x_data = np.array([1, 2, 3, 4, 5, 6])
     >>> y_data = np.array([1, 4, 9, 16, 25,])
-    >>> numpy_arrays.matching_size(x_data, "time", y_data, "concentration", "regression")
-    The size of the parameter 'time' (6) is different from the size of the parameter 'concentration' (5) in function 'regression', but they must be the same.
+    >>> z_data = np.array([1, 4, 9, 16, 25, 36])
+    >>> output = numpy_arrays.matching_size(
+        arrays=[x_data, y_data, z_data],
+        param_names=["x_data", "y_data", "z_data"],
+        kind="function",
+        kind_name="Tukey",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 15: The arrays `x_data` and ``y_data` and `z_data` in function `Tukey` must have the same size, but at least one of them has a different
+    size than the others.
+    -->  x_data = 6
+    -->  y_data = 5
+    -->  z_data = 6
 
     """
-    if array_a.size != array_b.size:
-        try:
-            raise ValueError("SizeMismatchError")
-        except ValueError:
-            print(
-                f"The size of the parameter '{param_name_a}' ({array_a.size}) is different from the size of the parameter '{param_name_b}' ({array_b.size}) in function '{func_name}', but they must be the same.\n"
-            )
-            raise
+    sizes = []
+    names = ""
+    for i in range(len(arrays)):
+        sizes.append(arrays[i].size)
+        if i == len(arrays) - 1:
+            names += param_names[i] + "`"
+        else:
+            names += "`" + param_names[i] + "` and `"
+
+    if len(set(sizes)) != 1:
+        user_warning(
+            f"The arrays {names} in {kind} `{kind_name}` must have the same size, but at least one of them has a different size than the others.",
+            stacklevel=stacklevel,
+        )
+        for i in range(len(arrays)):
+            print("--> ", param_names[i], "=", arrays[i].size)
+        print("\n")
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("SizeMismatchError")
+            except ValueError:
+                raise
+
     else:
         return True
 
