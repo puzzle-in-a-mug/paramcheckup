@@ -2,11 +2,7 @@
 
 --------------------------------------------------------------------------------
 Command to run at the prompt:
-
     python -m unittest -v tests/types/test_is_dict.py
-    or
-    python -m unittest -b tests/types/test_is_dict.py
-
 --------------------------------------------------------------------------------
 """
 
@@ -20,79 +16,109 @@ import numpy as np
 from paramcheckup.types import is_dict
 
 
-os.system('cls')
-
+os.system("cls")
 
 
 class Test_is_dict(unittest.TestCase):
-
-
     @classmethod
     def setUpClass(cls):
-        cls.dicionario = {"A": 1,}
+        cls.value = {
+            "A": 1,
+        }
+        cls.param_name = "x_data"
+        cls.kind = "function"
+        cls.kind_name = "ttest"
+        cls.stacklevel = 3
+        cls.error = True
 
     def test_outputs(self):
-        output = is_dict(self.dicionario, "parametro", "func_name")
+        output = is_dict(
+            self.value,
+            self.param_name,
+            self.kind,
+            self.kind_name,
+            self.stacklevel,
+            self.error,
+        )
         self.assertTrue(output, msg="not True when must be True")
-        output = is_dict(value=self.dicionario, param_name="parametro", func_name="func_name")
-        self.assertTrue(output, msg="not True when must be True")        
 
- 
- 
-    def test_string(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_dict("a", param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_dict("auisdhsa9d8ysadasd9oasdasdonha nsad\n", param_name="param", func_name="func_name")
+        output = is_dict(
+            value=self.value,
+            param_name=self.param_name,
+            kind=self.kind,
+            kind_name=self.kind_name,
+            stacklevel=self.stacklevel,
+            error=self.error,
+        )
+        self.assertTrue(output, msg="not True when must be True")
 
-    def test_float(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_dict(1.1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_dict(1.1012, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_dict(1.0, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_dict(np.float32(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_dict(np.float64(1), param_name="param", func_name="func_name")
+    def test_raises(self):
+        values = [
+            "anderson",
+            "as",
+            1,
+            np.int32(1),
+            np.int64(1),
+            [1],
+            [[1]],
+            (1,),
+            (1, 1, 1),
+            (1, (1,), 1),
+            None,
+        ]
+        for value in values:
+            with self.assertRaises(
+                TypeError,
+                msg=f"Does not raised error when value is a {type(value).__name__}",
+            ):
+                output = is_dict(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=self.error,
+                )
 
-    def test_int(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_dict(1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_dict(np.int64(1), param_name="param", func_name="func_name")
+    def test_raises_error_false(self):
+        values = [
+            "anderson",
+            "as",
+            1,
+            np.int32(1),
+            np.int64(1),
+            [1],
+            [[1]],
+            (1,),
+            (1, 1, 1),
+            (1, (1,), 1),
+            None,
+        ]
+        for value in values:
+            with self.assertRaises(
+                SystemExit,
+                msg=f"Does not raised SystemExit when value is a {type(value).__name__}",
+            ):
+                output = is_dict(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=False,
+                )
 
-    def test_tuple(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_dict((1,), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_dict((1,1,1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_dict((1, (1,), 1), param_name="param", func_name="func_name")
-
-    def test_empty(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when no value was passed"):
-            is_dict(param_name="param", func_name="func_name")
-
-    def test_pass(self):
-
-        result = is_dict({"a": 1}, param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was {'a': 1}")
-
-        result = is_dict({"a": 1, "b": 2}, param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was {'a': 1, 'b': 2}")
-
-        result = is_dict({"a": [1]}, param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was {'a': [1]}")
-
-        result = is_dict({"a": [1,2,3], "b": "2"}, param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was {'a': [1,2,3], 'b': '2'}")
-
-
-
-
+    def test_pass_error_false(self):
+        output = is_dict(
+            value=self.value,
+            param_name=self.param_name,
+            kind=self.kind,
+            kind_name=self.kind_name,
+            stacklevel=self.stacklevel,
+            error=False,
+        )
+        self.assertTrue(output, msg="not True when must be True")
 
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()
