@@ -61,12 +61,14 @@ from . import documentation as docs
     kind_desc=docs.KIND["description"],
     kind_name=docs.KIND_NAME["type"],
     kind_name_desc=docs.KIND_NAME["description"],
+    ndim=docs.NDIM["type"],
+    ndim_desc=docs.NDIM["description"],
     stacklevel=docs.STACKLEVEL["type"],
     stacklevel_desc=docs.STACKLEVEL["description"],
     error=docs.ERROR["type"],
     error_desc=docs.ERROR["description"],
 )
-def cast(array, param_name, kind, kind_name, ndim=1, stacklevel=4, error=True):
+def cast(array, param_name, kind, kind_name, ndim, stacklevel=4, error=True):
     """This function attempts to transform an `array` into a ndim :doc:`numpy array <numpy:reference/generated/numpy.array>`.
 
     Parameters
@@ -79,8 +81,8 @@ def cast(array, param_name, kind, kind_name, ndim=1, stacklevel=4, error=True):
         {kind_desc}
     {kind_name}
         {kind_name_desc}
-    ndim : int, optional
-        The number of dimentions that `array` must have (default is ``1``);
+    {ndim}
+        {ndim_desc}
     {stacklevel}
         {stacklevel_desc}
     {error}
@@ -486,7 +488,7 @@ def matching_size(
         stacklevel=3,
         error=False,
     )
-    UserWarning at line 15: The arrays `x_data` and ``y_data` and `z_data` in function `Tukey` must have the same size, but at least one of them has a different
+    UserWarning at line 6: The arrays `x_data` and ``y_data` and `z_data` in function `Tukey` must have the same size, but at least one of them has a different
     size than the others.
     -->  x_data = 6
     -->  y_data = 5
@@ -522,51 +524,92 @@ def matching_size(
         return True
 
 
-def n_dimensions(arr, param_name, func_name, n_dimensions):
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    ndim=docs.NDIM["type"],
+    ndim_desc=docs.NDIM["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def n_dimensions(array, param_name, ndim, kind, kind_name, stacklevel=4, error=True):
     """This function checks whether a :doc:`numpy array <numpy:reference/generated/numpy.array>` has *n_dimensions*.
+
 
     Parameters
     ----------
-    arr : :doc:`numpy array <numpy:reference/generated/numpy.array>`
+    array : :doc:`numpy array <numpy:reference/generated/numpy.array>`
         The :doc:`numpy array <numpy:reference/generated/numpy.array>` to check the dimensions;
-    param_name : str
-        The name of the parameter that received the variable *arr*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
-    n_dimensions : int
-        The number of dimentions thatthe array *arr* must have;
+    {param_name}
+        {param_name_desc} in `arrays`;
+    {ndim}
+        {ndim_desc}
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
-    True
-        If the array *arr* **has** *n_dimensions*;
-    ValueError
-        If the array *arr* **does not have** *n_dimensions*;
+    output : True
+        If `array` **HAS** `ndim`;
+    raises : ValueError
+        If `array` **DOES NOT HAVE** `ndim`;
+
 
     Examples
     --------
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
-    >>> data = np.array([1, 2, 3, 4, 5])
-    >>> n_dim = 1
-    >>> print(numpy_arrays.n_dimensions(data, "param", "ttest", n_dim))
+    >>> output = numpy_arrays.n_dimensions(
+        array=np.array([1, 2, 3, 4, 5]),
+        param_name="x_data",
+        ndim=1,
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(output)
     True
 
 
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
-    >>> data = np.array([1, 2, 3, 4, 5])
-    >>> n_dim = 2
-    >>> numpy_arrays.n_dimensions(data, "param", "ttest", n_dim)
-    The parameter 'param' of the 'ttest' function must have '2' dimensions, but but it has ndim = '1'.
+    >>> output = numpy_arrays.n_dimensions(
+        array=np.array([1, 2, 3, 4, 5]),
+        param_name="x_data",
+        ndim=2,
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 3: The array `x_data` in function `ttest` must have `2` dimensions, but it has `ndim = 1'.
+
 
     """
-    if arr.ndim != n_dimensions:
-        try:
-            raise ValueError("DimensionMismatchError")
-        except ValueError:
-            print(
-                f"The parameter '{param_name}' of the '{func_name}' function must have '{n_dimensions}' dimensions, but but it has ndim = '{arr.ndim}'.\n"
-            )
-            raise
+    if array.ndim != ndim:
+        user_warning(
+            f"The array `{param_name}` in {kind} `{kind_name}` must have `{ndim}` dimensions, but it has `ndim = {array.ndim}'.",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("DimensionMismatchError")
+            except ValueError:
+                raise
     return True

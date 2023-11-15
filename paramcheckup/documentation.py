@@ -37,6 +37,11 @@ LOWER = {
     "description": "The lower bound;",
 }
 
+NDIM = {
+    "type": "ndim : int, optional",
+    "description": "The number of dimentions that `array` must have;",
+}
+
 
 NUMBER = {
     "type": "number : int or float",
