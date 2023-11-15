@@ -167,47 +167,89 @@ def cast(array, param_name, kind, kind_name, ndim=1, stacklevel=4, error=True):
         return array
 
 
-def empty_array(arr, param_name, func_name):
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def empty_array(array, param_name, kind, kind_name, stacklevel=4, error=True):
     """This function checks whether a :doc:`numpy array <numpy:reference/generated/numpy.array>` is empty.
 
     Parameters
     ----------
-    arr : :doc:`numpy array <numpy:reference/generated/numpy.array>`
+    array : :doc:`numpy array <numpy:reference/generated/numpy.array>`
         The :doc:`numpy array <numpy:reference/generated/numpy.array>` to check for emptiness;
-    param_name : str
-        The name of the parameter that received the variable *arr*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {param_name}
+        {param_name_desc} `array`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
-    True
-        If the array *arr* is **NOT** empty;
-    ValueError
-        If the array *arr* is **EMPTY**;
+    output : True
+        If the `array` is **NOT** empty;
+    raises : ValueError
+        If the `array` **IS** empty;
+
 
     Examples
     --------
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
     >>> data = np.array([1, 2, 3, 4, 5])
-    >>> print(numpy_arrays.empty_array(data, "param", "ttest"))
+    >>> output = numpy_arrays.empty_array(
+        array=data,
+        param_name="x_data",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(output)
     True
+
 
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
     >>> data = np.array([])
-    >>> numpy_arrays.empty_array(data, "param", "ttest")
-    The parameter 'param' in function 'ttest' cannot be an empty array.
+    >>> output = numpy_arrays.empty_array(
+        array=data,
+        param_name="x_data",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 4: The `x_data` in function `ttest` cannot be an empty array.
+
+
     """
-    if arr.size == 0:
-        try:
-            raise ValueError("EmptyArrayError")
-        except ValueError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' cannot be an empty array.\n"
-            )
-            raise
+    if array.size == 0:
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` cannot be an empty array.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("EmptyArrayError")
+            except ValueError:
+                raise
     else:
         return True
 
