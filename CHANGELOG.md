@@ -7,6 +7,7 @@
 
 #### Module data_frames
 - ``column_name`` function (15/11/2023);
+- ``is_empty`` function (15/11/2023);
 
 #### Module parameters
 - ``param_options`` function (14/11/2023);
