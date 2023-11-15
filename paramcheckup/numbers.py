@@ -2,13 +2,12 @@
 ##### List of functions (alphabetical order) #####
 
 ## Functions WITH TESTS ###
-- is_between_a_and_b(value, a, b, param_name, func_name, inclusive=True)
-- is_float_or_int(value, param_name, func_name)
-- is_greater_than(value, lower, param_name, func_name, inclusive=True)
-- is_lower_than(value, upper, param_name, func_name, inclusive=True)
-- is_positive(value, param_name, func_name)
-- is_negative(value, param_name, func_name)
-
+- is_between_a_and_b(number, lower, upper, param_name, kind, kind_name, inclusive=True, stacklevel=4, error=True,)
+- is_float_or_int(number, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_greater_than(number, lower, param_name, kind, kind_name, inclusive=True, stacklevel=4, error=True)
+- is_lower_than(number, upper, param_name, kind, kind_name, inclusive=True, stacklevel=4, error=True)
+- is_negative(number, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_positive(number, param_name, kind, kind_name, stacklevel=4, error=True)
 
 
 ## Functions WITH some TESTS (needs improvements) ###
@@ -22,15 +21,11 @@
 
 
 
-
-
-
-
 Author: Anderson Marcos Dias Canteli <andersonmdcanteli@gmail.com>
 
 Created: October 24, 2023.
 
-Last update: October 25, 2023
+Last update: November 15, 2023
 
 
 
