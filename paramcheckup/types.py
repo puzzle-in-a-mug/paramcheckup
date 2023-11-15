@@ -51,6 +51,12 @@ from . import documentation as docs
 
 
 ##### FUNCTIONS #####
+
+
+def is_generic_type():
+    raise NotImplementedError
+
+
 @docs.docstring_parameter(
     value=docs.VALUE["type"],
     value_desc=docs.VALUE["description"],
