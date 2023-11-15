@@ -72,7 +72,7 @@ def cast(array, param_name, kind, kind_name, ndim=1, stacklevel=4, error=True):
     Parameters
     ----------
     array : list, tuple or pd.Series
-        The variable that will be converted into a one-dimensional :doc:`numpy array <numpy:reference/generated/numpy.array>`;
+        The variable that will be converted into a ndim :doc:`numpy array <numpy:reference/generated/numpy.array>`;
     {param_name}
         {param_name_desc} `array`;
     {kind}
