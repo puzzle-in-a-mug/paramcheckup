@@ -33,7 +33,7 @@ Last update: October 26, 2023
 ##### IMPORTS #####
 
 ### Standard ###
-
+import sys
 
 ### Third part ###
 import numpy as np
@@ -41,7 +41,8 @@ import pandas as pd
 from matplotlib.axes import SubplotBase
 
 ### home made ###
-
+from .utils import user_warning
+from . import documentation as docs
 
 ##### CONSTANTS #####
 
@@ -50,46 +51,87 @@ from matplotlib.axes import SubplotBase
 
 
 ##### FUNCTIONS #####
-def is_bool(value, param_name, func_name):
-    """This function checks whether a variable *value* is of the *bool* type.
+@docs.docstring_parameter(
+    value=docs.VALUE["type"],
+    value_desc=docs.VALUE["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_bool(value, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable `value` is of the `bool` type.
+
 
     Parameters
     ----------
-    value : any type
-        The variable that is tested as being of type *bool*;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {value}
+        {value_desc} *bool*;
+    {param_name}
+        {param_name_desc} value;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
 
     Returns
     -------
-    True
-        If variable *value* **IS** of the *bool* type;
-    TypeError
-        If variable *value* is **NOT** of the *bool* type;
+    output : True
+        If `value` **IS** of the `bool` type;
+    raises : TypeError
+        If `value` is **NOT** of the `bool` type;
 
 
     Examples
     --------
     >>> from paramcheckup import types
-    >>> print(types.is_bool(True, "param", "my_function"))
+    >>> result = types.is_bool(
+        value=True,
+        param_name="show",
+        kind="function",
+        kind_name="plot",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
     True
 
+
     >>> from paramcheckup import types
-    >>> types.is_bool(None, "param", "my_function")
-    The parameter 'param' in function 'my_function' must be of type *bool*, but its type is *NoneType*.
+    >>> result = types.is_bool(
+        value="ok",
+        param_name="show",
+        kind="function",
+        kind_name="plot",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The `show` in function `plot` must be of type `bool`, but its type is `str`.
 
     """
     if isinstance(value, bool) is False:
-        try:
-            raise TypeError("NotBoolError")
-        except TypeError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be of type *bool*, but its type is *{type(value).__name__}*.\n"
-            )
-            raise
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` must be of type `bool`, but its type is `{type(value).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("NotBoolError")
+            except ValueError:
+                raise
     return True
 
 
