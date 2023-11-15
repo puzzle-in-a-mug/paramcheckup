@@ -2,9 +2,7 @@
 ##### List of functions (alphabetical order) #####
 
 ## Functions WITH TESTS ###
-param_options(option, param_options, param_name, func_name)
-
-
+- param_options(option, options, param_name, kind, kind_name, stacklevel, error)
 
 
 ## Functions WITH some TESTS (needs improvements) ###
@@ -17,16 +15,11 @@ param_options(option, param_options, param_name, func_name)
 ##### List of CLASS (alphabetical order) #####
 
 
-
-
-
-
-
 Author: Anderson Marcos Dias Canteli <andersonmdcanteli@gmail.com>
 
 Created: October 28, 2023.
 
-Last update: October 28, 2023
+Last update: November 15, 2023
 
 
 
