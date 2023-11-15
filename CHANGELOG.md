@@ -7,7 +7,7 @@
 
 
 #### Module numpy_arrays
-
+- ``greater_than_n`` was renamed as ``size_is_greater_than_lower`` (15/11/2023);
 - ``empty_array`` function (15/11/2023);
 - ``cast_to_ndim`` was renamed as ``cast`` (15/11/2023);
 
