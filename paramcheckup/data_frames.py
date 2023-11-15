@@ -4,9 +4,8 @@
 
 ## Functions WITH TESTS ###
 
-- column_name_in_dataframe(column_name, data_frame, param_name, func_name)
-- is_empty_data_frame(data_frame, param_name, func_name)
-
+- is_empty(data_frame, param_name, kind, kind_name, stacklevel=4, error=True)
+- column_name(column_name, data_frame, param_name, kind, kind_name, stacklevel=4, error=True)
 
 
 ## Functions WITH some TESTS (needs improvements) ###
@@ -18,17 +17,11 @@
 
 ##### List of CLASS (alphabetical order) #####
 
-
-
-
-
-
-
 Author: Anderson Marcos Dias Canteli <andersonmdcanteli@gmail.com>
 
 Created: October 27, 2023.
 
-Last update: October 27, 2023
+Last update: November 15, 2023
 
 
 
