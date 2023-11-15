@@ -117,20 +117,20 @@ def is_bool(value, param_name, kind, kind_name, stacklevel=4, error=True):
         stacklevel=3,
         error=False,
     )
-    UserWarning at line 2: The `show` in function `plot` must be of type `bool`, but its type is `str`.
+    UserWarning at line 2: The parameter `show` in function `plot` must be of type `bool`, but its type is `str`.
 
     """
     if isinstance(value, bool) is False:
         user_warning(
-            f"The `{param_name}` in {kind} `{kind_name}` must be of type `bool`, but its type is `{type(value).__name__}`.\n",
+            f"The parameter `{param_name}` in {kind} `{kind_name}` must be of type `bool`, but its type is `{type(value).__name__}`.\n",
             stacklevel=stacklevel,
         )
         if error is False:
             sys.exit(1)
         else:
             try:
-                raise ValueError("NotBoolError")
-            except ValueError:
+                raise TypeError("NotBoolError")
+            except TypeError:
                 raise
     return True
 
