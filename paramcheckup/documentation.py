@@ -67,6 +67,12 @@ UPPER = {
 }
 
 
+VALUE = {
+    "type": "value : any type",
+    "description": "The variable that is tested as being of type",
+}
+
+
 # PARAM = {
 #     "type":
 #     "description":
