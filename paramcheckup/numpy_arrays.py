@@ -288,7 +288,7 @@ def size_is_greater_than_lower(
     array :  :doc:`numpy array <numpy:reference/generated/numpy.array>`
         One dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`;
     {param_name}
-        {param_name_desc}
+        {param_name_desc} `array`;
     {kind}
         {kind_desc}
     {kind_name}
