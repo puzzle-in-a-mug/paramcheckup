@@ -72,9 +72,9 @@ def is_bool(value, param_name, kind, kind_name, stacklevel=4, error=True):
     Parameters
     ----------
     {value}
-        {value_desc} *bool*;
+        {value_desc} `bool`;
     {param_name}
-        {param_name_desc} value;
+        {param_name_desc} `value`;
     {kind}
         {kind_desc}
     {kind_name}
@@ -135,51 +135,91 @@ def is_bool(value, param_name, kind, kind_name, stacklevel=4, error=True):
     return True
 
 
-def is_data_frame(data_frame, param_name, func_name):
-    """This function checks whether a variable *data_frame* is of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type.
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_data_frame(data_frame, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable `data_frame` is of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type.
+
 
     Parameters
     ----------
     data_frame : any type
         The variable that is tested as being of :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type;
-    param_name : str
-        The name of the parameter that received the variable *data_frame*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {param_name}
+        {param_name_desc} `data_frame`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
 
     Returns
     -------
-    True
-        If variable *data_frame* **IS** of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type;
-    TypeError
-        If variable *data_frame* is **NOT** of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type;
+    output : True
+        If variable `data_frame` **IS** of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type;
+    raises : TypeError
+        If variable `data_frame` is **NOT** of the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` type;
 
 
     Examples
     --------
     >>> from paramcheckup import types
     >>> import pandas as pd
-    >>> df = pd.DataFrame({
-        "Dataset": [1, 2, 3, 4, 5]
-    })
-    >>> print(types.is_data_frame(df, "data", "ttest"))
+    >>> df = pd.DataFrame(data=[1, 2, 3, 4, 5], columns=["Dataset"])
+    >>> result = types.is_data_frame(
+        data_frame=df,
+        param_name="x_data",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
     True
 
+
     >>> from paramcheckup import types
-    >>> data = (1, 2, 3, 4, 5)
-    >>> types.is_data_frame(data, "data", "ttest")
-    The parameter 'data' in function 'ttest' must be of type *DataFrame*, but its type is *tuple*.
+    >>> import pandas as pd
+    >>> df = [1, 2, 3, 4, 5]
+    >>> result = types.is_data_frame(
+        data_frame=df,
+        param_name="x_data",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 4: The parameter `x_data` in function `ttest` must be of type `DataFrame`, but its type is `list`.
+
 
     """
     if isinstance(data_frame, pd.DataFrame) is False:
-        try:
-            raise TypeError("NotDataFrameError")
-        except TypeError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be of type *DataFrame*, but its type is *{type(data_frame).__name__}*.\n"
-            )
-            raise
+        user_warning(
+            f"The parameter `{param_name}` in {kind} `{kind_name}` must be of type `DataFrame`, but its type is `{type(data_frame).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError("NotDataFrameError")
+            except TypeError:
+                raise
+
     return True
 
 
