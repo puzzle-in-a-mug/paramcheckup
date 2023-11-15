@@ -7,6 +7,7 @@
 
 #### Module types 
 - ``is_tuple`` function (15/11/2023);
+- ``is_float`` function (15/11/2023);
 - ``is_bool`` function (15/11/2023);
 - ``is_dict`` function (15/11/2023);
 
