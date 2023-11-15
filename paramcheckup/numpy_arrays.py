@@ -32,69 +32,137 @@ Last update: October 26, 2023
 
 
 """
+
+##### IMPORTS #####
+
+### Standard ###
+import sys
+
+### Third part ###
 import numpy as np
 
+### home made ###
+from .utils import user_warning
+from . import documentation as docs
 
-def cast_to_ndim(array, param_name, func_name, ndim=1):
-    """This function attempts to transform an *array* into a one-dimensional :doc:`numpy array <numpy:reference/generated/numpy.array>`.
+##### CONSTANTS #####
+
+
+##### CLASSES #####
+
+
+##### FUNCTIONS #####
+
+
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def cast(array, param_name, kind, kind_name, ndim=1, stacklevel=4, error=True):
+    """This function attempts to transform an `array` into a ndim :doc:`numpy array <numpy:reference/generated/numpy.array>`.
 
     Parameters
     ----------
     array : list, tuple or pd.Series
         The variable that will be converted into a one-dimensional :doc:`numpy array <numpy:reference/generated/numpy.array>`;
-    param_name : str
-        The name of the parameter that received the variable *array*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {param_name}
+        {param_name_desc} `array`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
     ndim : int, optional
-        The number of dimentions thatthe array *arr* must have (default is ``1``);
+        The number of dimentions that `array` must have (default is ``1``);
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
     array :  :doc:`numpy array <numpy:reference/generated/numpy.array>`
         One dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`;
     raises : ValueError
-        If it was not possible to transform *array* A into an :doc:`numpy array <numpy:reference/generated/numpy.array>`;
+        If it was not possible to transform `array` into a :doc:`numpy array <numpy:reference/generated/numpy.array>`;
 
 
     Examples
     --------
     >>> from paramcheckup import numpy_arrays
     >>> x_exp = [1, 2, 3, 4]
-    >>> x_exp = numpy_arrays.cast_to_ndim(x_exp, "x_exp", "fit", ndim=1)
+    >>> x_exp = numpy_arrays.cast(
+        array=x_exp,
+        param_name="x",
+        kind="function",
+        kind_name="ttest",
+        ndim=1,
+        stacklevel=3,
+        error=True,
+    )
     >>> print(x_exp)
     [1 2 3 4]
 
+
     >>> from paramcheckup import numpy_arrays
-    >>> x_exp = 1
-    >>> x_exp = numpy_arrays.cast_to_ndim(x_exp, "x_exp", "fit", ndim=1)
-    The array generated for the parameter 'x_exp' in function 'fit' contains '0' dimensions, but it must contain '1' dimensions. Please provide a variable with '1' dimensions.
+    >>> x_exp = [1, 2, 3, 4]
+    >>> x_exp = numpy_arrays.cast(
+        array=x_exp,
+        param_name="x",
+        kind="function",
+        kind_name="ttest",
+        ndim=2,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 3: The array generated for `x` in function `ttest` contains `1` dimensions, but it should contain `2` dimensions.
+
+
     """
     array = np.asarray(array)
     if isinstance(array, np.ndarray) is False:
-        try:
-            raise ValueError("CastingError")
-        except ValueError:
-            print(
-                f"Unable to transform parameter '{param_name}' in function '{func_name}' into a NumPyArray satisfactorily.\n"
-            )
-            raise
+        user_warning(
+            f"Unable to transform `{param_name}` in {kind} `{kind_name}` into a NumPyArray satisfactorily.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("CastingError")
+            except ValueError:
+                raise
     elif array.ndim != ndim:
-        try:
-            raise ValueError("CastingError")
-        except ValueError:
-            print(
-                f"The array generated for the parameter '{param_name}' in function '{func_name}' contains '{array.ndim}' dimensions, but it must contain '{ndim}' dimensions. Please provide a variable with '{ndim}' dimensions.\n"
-            )
-            raise
+        user_warning(
+            f"The array generated for `{param_name}` in {kind} `{kind_name}` contains `{array.ndim}` dimensions, but it should contain `{ndim}` dimensions.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("CastingError")
+            except ValueError:
+                raise
     elif array.size == 0:
-        try:
-            raise ValueError("CastingError")
-        except ValueError:
-            print(
-                f"The array generated for the parameter '{param_name}' in function '{func_name}' is empty. \n"
-            )
-            raise
+        user_warning(
+            f"The array generated for `{param_name}` in {kind} `{kind_name}` is empty. \n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("CastingError")
+            except ValueError:
+                raise
     else:
         return array
 
