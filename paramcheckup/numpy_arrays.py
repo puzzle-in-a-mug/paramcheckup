@@ -6,7 +6,7 @@
 - empty_array(array, param_name, kind, kind_name, stacklevel=4, error=True)
 - size_is_greater_than_lower(array, param_name, kind, kind_name, lower, inclusive=True, stacklevel=4, error=True)
 - matching_size(arrays, param_names, kind, kind_name, stacklevel=4, error=True)
-n_dimensions(array, param_name, ndim, kind, kind_name, stacklevel=4, error=True)
+- n_dimensions(array, param_name, ndim, kind, kind_name, stacklevel=4, error=True)
 
 ## Functions WITH some TESTS (needs improvements) ###
 - cast(array, param_name, kind, kind_name, ndim, stacklevel=4, error=True) (first error does not have a test)
