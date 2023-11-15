@@ -254,83 +254,157 @@ def empty_array(array, param_name, kind, kind_name, stacklevel=4, error=True):
         return True
 
 
-def greater_than_n(array, param_name, func_name, minimum=3, inclusive=True):
-    """This function checks if the size of the :doc:`numpy array <numpy:reference/generated/numpy.array>` *array* is greater than *minimum*.
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    lower=docs.LOWER["type"],
+    lower_desc=docs.LOWER["description"],
+    inclusive=docs.INCLUSIVE["type"],
+    inclusive_desc=docs.INCLUSIVE["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def size_is_greater_than_lower(
+    array,
+    param_name,
+    kind,
+    kind_name,
+    lower,
+    inclusive=True,
+    stacklevel=4,
+    error=True,
+):
+    """This function checks if the size of the :doc:`numpy array <numpy:reference/generated/numpy.array>` `array` is greater;equal than `lower`.
+
 
     Parameters
     ----------
     array :  :doc:`numpy array <numpy:reference/generated/numpy.array>`
         One dimension :doc:`numpy array <numpy:reference/generated/numpy.array>`;
-    param_name : str
-        The name of the parameter that received the variable *array*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
-    minimum : int, optional
-        The smallest acceptable value for the *array* (default is ``3``);
-    inclusive : bool, optional
-        Specify whether the *minimum* value should be included (closed range, *True* default) or excluded (open range, *False*);
+    {param_name}
+        {param_name_desc}
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {lower}
+        {lower_desc}
+    {inclusive}
+        {inclusive_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
     output : True
-        If the size of the *array* **IS** greater than the *minimum*
+        If the size of the `array` **IS** greater than `lower` (or **IS** equal/greater than `lower`);
     raises : ValueError
-        If the size of the *array* is **NOT** greater than the *minimum*
+        If the size of the `array` is **NOT** greater than `lower` (or is **NOT** equal/greater than `lower`);
+
 
     Examples
     --------
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
-    >>> x_exp = np.array([1, 2, 3, 4, 4])
-    >>> minimum = 5
-    >>> output = numpy_arrays.greater_than_n(x_exp, "x_exp", "fit", minimum, inclusive=True)
+    >>> x_exp = np.array([1, 1, 2, 4, 4, 2, 3])
+    >>> output = numpy_arrays.size_is_greater_than_lower(
+        array=x_exp,
+        param_name="x_data",
+        kind="function",
+        kind_name="linear_regression",
+        lower=3,
+        inclusive=True,
+        stacklevel=3,
+        error=True,
+    )
     >>> print(output)
     True
 
 
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
-    >>> x_exp = np.array([1, 2, 3, 4, 4])
-    >>> minimum = 6
-    >>> output = numpy_arrays.greater_than_n(x_exp, "x_exp", "fit", minimum, inclusive=True)
-    >>> print(output)
-    The *array* passed to function 'fit' through parameter 'x_exp' must have a size greater than or equal to '6', but its size is '5'.
-
-
-    >>> from paramcheckup import numpy_arrays
-    >>> import numpy as np
-    >>> x_exp = np.array([1, 2, 3, 4, 4])
-    >>> minimum = 6
-    >>> output = numpy_arrays.greater_than_n(x_exp, "x_exp", "fit", minimum, inclusive=False)
+    >>> x_exp = np.array([1, 2, 4])
+    >>> output = numpy_arrays.size_is_greater_than_lower(
+        array=x_exp,
+        param_name="x_data",
+        kind="function",
+        kind_name="linear_regression",
+        lower=3,
+        inclusive=True,
+        stacklevel=3,
+        error=True,
+    )
     >>> print(output)
     True
 
 
     >>> from paramcheckup import numpy_arrays
     >>> import numpy as np
-    >>> x_exp = np.array([1, 2, 3, 4, 4])
-    >>> minimum = 5
-    >>> numpy_arrays.greater_than_n(x_exp, "x_exp", "fit", minimum, inclusive=False)
-    The *array* passed to function 'fit' through parameter 'x_exp' must have a size greater than '5', but its size is '5'.
+    >>> x_exp = np.array([1, 2])
+    >>> output = numpy_arrays.size_is_greater_than_lower(
+        array=x_exp,
+        param_name="x_data",
+        kind="function",
+        kind_name="linear_regression",
+        lower=3,
+        inclusive=True,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 4: The size of the array `x_data` in function `linear_regression` must be equal or greater than `3` (`x_data.size >= 3`), but it is `2`.
+
+
+    >>> from paramcheckup import numpy_arrays
+    >>> import numpy as np
+    >>> x_exp = np.array([1, 2, 4])
+    >>> output = numpy_arrays.size_is_greater_than_lower(
+        array=x_exp,
+        param_name="x_data",
+        kind="function",
+        kind_name="linear_regression",
+        lower=3,
+        inclusive=False,
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 4: The size of the array `x_data` in function `linear_regression` must be greater than `3` (`x_data.size > 3`), but it is `3`.
+
     """
     if inclusive:
-        if array.size < minimum:
-            try:
-                raise ValueError("SmallSizeError")
-            except ValueError:
-                print(
-                    f"The *array* passed to function '{func_name}' through parameter '{param_name}' must have a size greater than or equal to '{minimum}', but its size is '{array.size}'.\n"
-                )
-                raise
+        if array.size < lower:
+            user_warning(
+                f"The size of the array `{param_name}` in {kind} `{kind_name}` must be equal or greater than `{lower}` (`{param_name}.size >= {lower}`), but it is `{array.size}`.",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("SmallSizeError")
+                except ValueError:
+                    raise
     else:
-        if array.size <= minimum:
-            try:
-                raise ValueError("SmallSizeError")
-            except ValueError:
-                print(
-                    f"The *array* passed to function '{func_name}' through parameter '{param_name}' must have a size greater than '{minimum}', but its size is '{array.size}'.\n"
-                )
-                raise
+        if array.size <= lower:
+            user_warning(
+                f"The size of the array `{param_name}` in {kind} `{kind_name}` must be greater than `{lower}` (`{param_name}.size > {lower}`), but it is `{array.size}`.",
+                stacklevel=stacklevel,
+            )
+            if error is False:
+                sys.exit(1)
+            else:
+                try:
+                    raise ValueError("SmallSizeError")
+                except ValueError:
+                    raise
     return True
 
 
