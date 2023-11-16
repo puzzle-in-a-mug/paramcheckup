@@ -4,9 +4,8 @@
 
 ## Functions WITH TESTS ###
 
-- column_name_in_dataframe(column_name, data_frame, param_name, func_name)
-- is_empty_data_frame(data_frame, param_name, func_name)
-
+- is_empty(data_frame, param_name, kind, kind_name, stacklevel=4, error=True)
+- column_name(column_name, data_frame, param_name, kind, kind_name, stacklevel=4, error=True)
 
 
 ## Functions WITH some TESTS (needs improvements) ###
@@ -18,17 +17,11 @@
 
 ##### List of CLASS (alphabetical order) #####
 
-
-
-
-
-
-
 Author: Anderson Marcos Dias Canteli <andersonmdcanteli@gmail.com>
 
 Created: October 27, 2023.
 
-Last update: October 27, 2023
+Last update: November 15, 2023
 
 
 
@@ -37,12 +30,13 @@ Last update: October 27, 2023
 ##### IMPORTS #####
 
 ### Standard ###
-
+import sys
 
 ### Third part ###
 
 ### home made ###
-
+from .utils import user_warning
+from . import documentation as docs
 
 ##### CONSTANTS #####
 
@@ -51,7 +45,21 @@ Last update: October 27, 2023
 
 
 ##### FUNCTIONS #####
-def column_name(column_name, data_frame, param_name, func_name):
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def column_name(
+    column_name, data_frame, param_name, kind, kind_name, stacklevel=4, error=True
+):
     """This function checks whether the *str* *column_name* is a valid column name for the :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` *dataframe*.
 
     Parameters
@@ -59,89 +67,175 @@ def column_name(column_name, data_frame, param_name, func_name):
     column_name : str
         The name of the column to be checked;
     data_frame : :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`
-        The :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` that should contain the column named *column_name*;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+        The :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` that should contain the column named `column_name`;
+    {param_name}
+        {param_name_desc}  `data_frame`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
-    True
-        If variable *column_name* **IS** a valid column name for the *data_frame*;
-    ValueError
-        If variable *column_name* is **NOT** a valid column name for the *data_frame*;
+    output : True
+        If `column_name` **IS** a valid column name for the `data_frame`;
+    raises : ValueError
+        If `column_name` is **NOT** a valid column name for the `data_frame`;
 
     Examples
     --------
     >>> import pandas as pd
     >>> from paramcheckup import data_frames
-    >>> df = pd.DataFrame({
-        "Column A": [1, 2, 3, 4, 5],
-        "Column V": [-1, -2, -3, -4, -5],
-    })
-    >>> print(data_frames.column_name("Column A", df, "data_frame", "my_function"))
+    >>> data = [["Anderson", 33], ["Juliana", 31], ["Marcos", 26], ["Mariana", 30]]
+    >>> columns = ["Name", "Age"]
+    >>> df = pd.DataFrame(
+        data=data,
+        columns=columns,
+    )
+    >>> output = data_frames.column_name(
+        column_name="Name",
+        data_frame=df,
+        param_name="data_frame",
+        kind="function",
+        kind_name="database",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(output)
     True
 
-    >>> data_frames.column_name("Column B", df, "data_frame", "my_function")
-    The parameter 'data_frame' in function 'my_function' does not contain a column with the name *Column B*.
+
+    >>> import pandas as pd
+    >>> from paramcheckup import data_frames
+    >>> data = [["Anderson", 33], ["Juliana", 31], ["Marcos", 26], ["Mariana", 30]]
+    >>> columns = ["Name", "Age"]
+    >>> df = pd.DataFrame(
+        data=data,
+        columns=columns,
+    )
+    >>> output = data_frames.column_name(
+        column_name="Gender",
+        data_frame=df,
+        param_name="data_frame",
+        kind="function",
+        kind_name="database",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 10: The `data_frame` in function `database` does not contain a column with the name `Gender`.
+
+
     """
 
     if column_name not in data_frame.columns:
-        try:
-            raise ValueError("ColumnNameError")
-        except ValueError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' does not contain a column with the name *{column_name}*.\n"
-            )
-            raise
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` does not contain a column with the name `{column_name}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("ColumnNameError")
+            except ValueError:
+                raise
     return True
 
 
-def is_empty(data_frame, param_name, func_name):
-    """This function checks whether the *data_frame* is an empty :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_empty(data_frame, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether the `data_frame` is an empty :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`
 
     Parameters
     ----------
     data_frame : :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`
         The :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>` to be checked for emptiness;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {param_name}
+        {param_name_desc} `data_frame`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
     Returns
     -------
-    True
-        If variable *data_frame* is **NOT** an empty :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`;
-    ValueError
-        If variable *data_frame* is an **EMPTY** :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`;
+    output : True
+        If variable `data_frame` is **NOT** an empty :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`;
+    raises : ValueError
+        If variable `data_frame` **IS** an empty :doc:`DataFrame <pandas:reference/api/pandas.DataFrame>`;
+
 
     Examples
     --------
-    >>> from paramcheckup import data_frames
     >>> import pandas as pd
-    >>> df = pd.DataFrame({
-        "Dataset": [1, 2, 3, 4, 5]
-    })
-    >>> print(data_frames.is_empty(df, "data", "ttest"))
+    >>> from paramcheckup import data_frames
+    >>> data = [["Anderson", 33], ["Juliana", 31], ["Marcos", 26], ["Mariana", 30]]
+    >>> columns = ["Name", "Age"]
+    >>> df = pd.DataFrame(
+        data=data,
+        columns=columns,
+    )
+    >>> output = data_frames.is_empty(
+        data_frame=df,
+        param_name="data_frame",
+        kind="function",
+        kind_name="database",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(output)
     True
 
 
-    >>> from paramcheckup import data_frames
     >>> import pandas as pd
-    >>> df = pd.DataFrame({})
-    >>> data_frames.is_empty(df, "data", "ttest")
-    The DataFrame 'data' in function 'ttest' is an EMPTY DataFrame.
+    >>> from paramcheckup import data_frames
+    >>> data = []
+    >>> columns = ["Name", "Age"]
+    >>> df = pd.DataFrame(
+        data=data,
+        columns=columns,
+    )
+    >>> output = data_frames.is_empty(
+        data_frame=df,
+        param_name="data_frame",
+        kind="function",
+        kind_name="database",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 10: The `data_frame` in function `database` is an EMPTY DataFrame.
 
     """
 
     if data_frame.empty:
-        try:
-            raise ValueError("EmptyDataFrameError")
-        except ValueError:
-            print(
-                f"The DataFrame '{param_name}' in function '{func_name}' is an EMPTY DataFrame.\n"
-            )
-            raise
+        user_warning(
+            f"The `{param_name}` in {kind} `{kind_name}` is an EMPTY DataFrame.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise ValueError("EmptyDataFrameError")
+            except ValueError:
+                raise
     return True

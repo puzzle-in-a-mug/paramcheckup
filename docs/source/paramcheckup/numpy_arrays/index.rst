@@ -8,10 +8,10 @@ numpy_arrays
 .. toctree::
    :maxdepth: 1
 
-   cast_to_ndim
+   cast
    empty_array
-   greater_than_n
    matching_size
    n_dimensions
+   size_is_greater_than_lower
 
    

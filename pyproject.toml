@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paramcheckup"
-version = "1.0.0"
-description = "Check whether the parameters received by a function are correct"
+version = "1.0.1"
+description = "Check whether the parameters received are correct"
 authors = [
     {name = "Anderson Marcos Dias Canteli", email = "andersonmdcanteli@gmail.com"},
 ]

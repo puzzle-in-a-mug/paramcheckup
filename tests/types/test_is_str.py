@@ -2,11 +2,7 @@
 
 --------------------------------------------------------------------------------
 Command to run at the prompt:
-
     python -m unittest -v tests/types/test_is_str.py
-    or
-    python -m unittest -b tests/types/test_is_str.py
-
 --------------------------------------------------------------------------------
 """
 
@@ -20,80 +16,110 @@ import numpy as np
 from paramcheckup.types import is_str
 
 
-os.system('cls')
-
+os.system("cls")
 
 
 class Test_is_str(unittest.TestCase):
-
-
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.value = "tukey"
+        cls.param_name = "test"
+        cls.kind = "function"
+        cls.kind_name = "comparison_test"
+        cls.stacklevel = 3
+        cls.error = True
+
+        cls.values = ["[[1, 2, 3]]", "anderson", "\n"]
+
+        cls.raises = [
+            1.1,
+            np.float64(1),
+            np.float16(1),
+            1,
+            (1,),
+            (1, 1, 1),
+            (1, (1,), 1),
+            None,
+            {"a": 1},
+            set([1, 2, 3]),
+        ]
 
     def test_outputs(self):
-        output = is_str("42", "parametro", "func_name")
+        output = is_str(
+            self.value,
+            self.param_name,
+            self.kind,
+            self.kind_name,
+            self.stacklevel,
+            self.error,
+        )
         self.assertTrue(output, msg="not True when must be True")
-        output = is_str(value="42", param_name="parametro", func_name="func_name")
-        self.assertTrue(output, msg="not True when must be True")        
 
-   
+        output = is_str(
+            value=self.value,
+            param_name=self.param_name,
+            kind=self.kind,
+            kind_name=self.kind_name,
+            stacklevel=self.stacklevel,
+            error=self.error,
+        )
 
-    def test_int(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is int"):
-            is_str(1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is int"):
-            is_str(np.int32(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is int"):
-            is_str(np.int64(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is int"):
-            is_str(np.uint(1), param_name="param", func_name="func_name")
+        self.assertTrue(output, msg="not True when must be True")
 
+    def test_raises(self):
+        for value in self.raises:
+            with self.assertRaises(
+                TypeError,
+                msg=f"Does not raised error when value is a {type(value).__name__}",
+            ):
+                output = is_str(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=self.error,
+                )
 
-    def test_float(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_str(1.1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_str(1.1012, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_str(1.0, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_str(np.float32(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_str(np.float64(1), param_name="param", func_name="func_name")
-
-    def test_list(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_str([1], param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_str([[1]], param_name="param", func_name="func_name")
-
-    def test_tuple(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_str((1,), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_str((1,1,1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_str((1, (1,), 1), param_name="param", func_name="func_name")
-
-    def test_empty(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when no value was passed"):
-            is_str(param_name="param", func_name="func_name")
-
+    def test_raises_error_false(self):
+        for value in self.raises:
+            with self.assertRaises(
+                SystemExit,
+                msg=f"Does not raised SystemExit when value is a {type(value).__name__}",
+            ):
+                output = is_str(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=False,
+                )
 
     def test_pass(self):
-        result = is_str("a", param_name="param", func_name="func_name")
-        self.assertTrue(result, msg="Does not returned True with a string")
+        for value in self.values:
+            output = is_str(
+                value=value,
+                param_name=self.param_name,
+                kind=self.kind,
+                kind_name=self.kind_name,
+                stacklevel=self.stacklevel,
+                error=self.error,
+            )
+        self.assertTrue(output, msg="not True when must be True")
 
-        result = is_str("auisdhsa9d8ysadasd9oasdasdonha nsad\n", param_name="param", func_name="func_name")
-        self.assertTrue(result, msg="Does not returned True with a string")
-
-        result = is_str("", param_name="param", func_name="func_name")
-        self.assertTrue(result, msg="Does not returned True when an empty string was passed")        
-
-   
-
+    def test_pass_error_false(self):
+        for value in self.values:
+            output = is_str(
+                value=value,
+                param_name=self.param_name,
+                kind=self.kind,
+                kind_name=self.kind_name,
+                stacklevel=self.stacklevel,
+                error=False,
+            )
+        self.assertTrue(output, msg="not True when must be True")
 
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()

@@ -4,7 +4,7 @@
 
 <img srd="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue"> <img src="https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white"> <img src="https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white"> <img src="https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black"> <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg">
 
-This package has a collection of functions that check whether the parameter received by a function is of a certain type, returning ``True`` if the input is as expected or ``raising an error`` that indicates what the problem is.
+This package has a collection of functions that check whether the parameter received has a certain type, returning ``True`` if the input is as expected or ``raising an error`` that indicates what the problem is.
 
 
 
@@ -38,16 +38,23 @@ def t_test(x_data, mu, alpha):
     return tcalc, t_critical, p_value, conclusion
 ```
 
-The ``t_test`` function strongly depends on the ``x_data`` parameter being a one-dimensional ``NumpyArray``. The ``types.is_numpy(value, param_name, func_name)`` function can checks whether this is ``True``:
+The ``t_test`` function strongly depends on the ``x_data`` parameter being a one-dimensional ``NumpyArray``. The ``types.is_numpy(value, param_name, func_name)`` function can checks whether ``x_data`` is in fact a ``NumpyArray`` (``True``):
 
 
 
 ```python
 from paramcheckup import types
 def t_test(x_data, mu, alpha):
-    types.is_numpy(x_data, "x_data", "t_test")
+    types.is_numpy(
+        value=x_data,
+        param_name="x_data",
+        kind="function",
+        kind_name="t_test",
+        stacklevel=4,
+        error=True,
+    )
     
-    tcalc = (x_data.mean() - mu)*np.sqrt(x_data)/(x_data.std(ddof=1))
+    tcalc = (x_data.mean() - mu)*np.sqrt(x_data.size)/(x_data.std(ddof=1))
     t_critical = stats.t.ppf(1-alpha/2, x_data.size - 1)
     p_value = (1 - stats.t.cdf(np.abs(tcalc), x_data.size - 1))*2
     if p_value < alpha:
@@ -57,7 +64,7 @@ def t_test(x_data, mu, alpha):
     return tcalc, t_critical, p_value, conclusion
 ```
 
-If the user passes a ``NumpyArray`` as input for ``x_data``, the result of ``types.is_numpy`` function will be ``True`` and the calculation will be performed.
+If the user passes a ``NumpyArray`` as input for ``x_data``, the result of ``types.is_numpy`` will be ``True`` and the calculation will be performed as expected:
 
 ```python
 x = np.array([1.24, 1.3, 1.11])
@@ -72,9 +79,10 @@ However, if you use a ``list`` instead of ``NumpyArray``, an ``TypeError`` will 
 x = [1.24, 1.3, 1.11]
 result = t_test(x, 3, 0.05)
 The parameter 'x_data' in function 't_test' must be of type *numpy.ndarray*, but its type is *list*.
+UserWarning at line 28: The parameter `x_data` in function `t_test` must be of type `numpy.ndarray`, but its type is `list`.
 ```
 
-The Traceback error is also displayed:
+The UserWarning informs the line ***where*** the error occurred, ***which parameter*** is wrong and ***how*** this parameter should be to be correct. By default, the error traceback is also showed to the user:
 
 ```
 Traceback (most recent call last):
@@ -87,9 +95,20 @@ Traceback (most recent call last):
 TypeError: NotNumPyError
 ```
 
-> In future releases, the ``Traceback`` will be optional
+However, it is possible to silence the traceback through the error parameter:
 
+```python
+types.is_numpy(
+    value=x_data,
+    param_name="x_data",
+    kind="function",
+    kind_name="t_test",
+    stacklevel=4,
+    error=False, # <------
+)
+```
 
+> Note that the function also requires the array to have a single dimension. This could be checked using the ``paramcheckup.numpy_arrays.n_dimensions function()``. 
 
 ## Example 2
 
@@ -99,8 +118,27 @@ The ``alpha`` parameter indicates the level of significance that should be adopt
 from paramcheckup import types, numbers
 
 def t_test(x_data, mu, alpha):
-    types.is_numpy(x_data, "x_data", "t_test")
-    numbers.is_between_a_and_b(alpha, 0, 1, "alpha", "t_test", inclusive=False)
+    types.is_numpy(
+        value=x_data,
+        param_name="x_data",
+        kind="function",
+        kind_name="t_test",
+        stacklevel=4,
+        error=False,
+    )
+
+    numbers.is_between_a_and_b(
+        number=alpha,
+        lower=0,
+        upper=1,
+        param_name="alpha",
+        kind="function",
+        kind_name="t_test",
+        inclusive=False,
+        stacklevel=4,
+        error=False,
+    )
+
     tcalc = (x_data.mean() - mu)*np.sqrt(x_data.size)/(x_data.std(ddof=1))
     t_critical = stats.t.ppf(1-alpha/2, x_data.size - 1)
     p_value = (1 - stats.t.cdf(np.abs(tcalc), x_data.size - 1))*2
@@ -114,14 +152,17 @@ def t_test(x_data, mu, alpha):
 x = np.array([1.24, 1.3, 1.11])
 alpha = 1.05
 result = t_test(x, 3, alpha)
-The value of parameter 'alpha' in function 't_test' must be within the range of 0 < value < 1, but it is '1.05'.
+UserWarning at line 39: The value of `alpha` in function `t_test` must be within the range of `0 < alpha < 1`, but it is `1.05`.
 ```
 
 
-> ``Traceback`` ommited
+> Note that the ``inclusive=False`` parameter causes the limits to be open, which makes sense for the significance level. If ``inclusive=True``, we would have obtained the following error:
 
+```python
+UserWarning at line 39: The value of `alpha` in function `t_test` must be within the range of `0 <= alpha <= 1`, but it is `1.05`.
+```
 
-Note that the ``inclusive=False`` parameter causes the limits to be open, which makes sense for the significance level.
+> Note that ``alpha`` must be of numeric type. This could be checked using function ``paramcheckup.numbers.is_float_or_int()`` ***before*** checking whether the parameter is within a numerical range.
 
 
 ## License

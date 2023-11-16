@@ -2,11 +2,7 @@
 
 --------------------------------------------------------------------------------
 Command to run at the prompt:
-
     python -m unittest -v tests/types/test_is_int.py
-    or
-    python -m unittest -b tests/types/test_is_int.py
-
 --------------------------------------------------------------------------------
 """
 
@@ -20,76 +16,96 @@ import numpy as np
 from paramcheckup.types import is_int
 
 
-os.system('cls')
-
+os.system("cls")
 
 
 class Test_is_int(unittest.TestCase):
-
-
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.value = 5
+        cls.param_name = "alpha"
+        cls.kind = "function"
+        cls.kind_name = "ttest"
+        cls.stacklevel = 3
+        cls.error = True
+
+        cls.values = [
+            "anderson",
+            1.1,
+            np.float64(1),
+            np.float16(1),
+            [1],
+            [[1]],
+            (1,),
+            (1, 1, 1),
+            (1, (1,), 1),
+            None,
+            {"a": 1},
+            set([1, 2, 3]),
+        ]
 
     def test_outputs(self):
-        output = is_int(1, "parametro", "func_name")
+        output = is_int(
+            self.value,
+            self.param_name,
+            self.kind,
+            self.kind_name,
+            self.stacklevel,
+            self.error,
+        )
         self.assertTrue(output, msg="not True when must be True")
-        output = is_int(value=0, param_name="parametro", func_name="func_name")
-        self.assertTrue(output, msg="not True when must be True")        
 
-   
+        output = is_int(
+            value=self.value,
+            param_name=self.param_name,
+            kind=self.kind,
+            kind_name=self.kind_name,
+            stacklevel=self.stacklevel,
+            error=self.error,
+        )
+        self.assertTrue(output, msg="not True when must be True")
 
-    def test_string(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_int("a", param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_int("auisdhsa9d8ysadasd9oasdasdonha nsad\n", param_name="param", func_name="func_name")
+    def test_pass_erro_ffalse(self):
+        output = is_int(
+            self.value,
+            self.param_name,
+            self.kind,
+            self.kind_name,
+            self.stacklevel,
+            False,
+        )
+        self.assertTrue(output, msg="not True when must be True")
 
-    def test_float(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_int(1.1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_int(1.1012, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_int(1.0, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_int(np.float32(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_int(np.float64(1), param_name="param", func_name="func_name")
+    def test_raises(self):
+        for value in self.values:
+            with self.assertRaises(
+                TypeError,
+                msg=f"Does not raised error when value is a {type(value).__name__}",
+            ):
+                output = is_int(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=self.error,
+                )
 
-    def test_list(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_int([1], param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_int([[1]], param_name="param", func_name="func_name")
-
-    def test_tuple(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_int((1,), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_int((1,1,1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_int((1, (1,), 1), param_name="param", func_name="func_name")
-
-    def test_empty(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when no value was passed"):
-            is_int(param_name="param", func_name="func_name")
-
-    def test_pass(self):
-        result = is_int(1, param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was 1")
-
-        result = is_int(np.int32(1), param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was np.int32(1)")
-
-        result = is_int(np.int64(1), param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was np.int64(1)")
-
-        result = is_int(np.uint(1), param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was np.uint(1)")
-   
-
+    def test_raises_error_false(self):
+        for value in self.values:
+            with self.assertRaises(
+                SystemExit,
+                msg=f"Does not raised SystemExit when value is a {type(value).__name__}",
+            ):
+                output = is_int(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=False,
+                )
 
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()

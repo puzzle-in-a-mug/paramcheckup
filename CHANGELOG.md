@@ -1,6 +1,51 @@
 # Changelog
 
 
+## v 1.0.1 (14/11/2023)
+
+### Updates
+
+#### Module types 
+- ``is_tuple`` function (15/11/2023);
+- ``is_subplots`` function (15/11/2023);
+- ``is_str`` function (15/11/2023);
+- ``is_numpy`` function (15/11/2023);
+- ``is_list`` function (15/11/2023);
+- ``lis_of_types`` function (15/11/2023);
+- ``is_int`` function (15/11/2023);
+- ``is_float`` function (15/11/2023);
+- ``is_tuple`` function (15/11/2023);
+- ``is_bool`` function (15/11/2023);
+- ``is_dict`` function (15/11/2023);
+
+#### Module numpy_arrays
+- ``n_dimensions``  function (15/11/2023);
+- ``matching_size`` function (15/11/2023);
+- ``greater_than_n`` was renamed as ``size_is_greater_than_lower`` (15/11/2023);
+- ``empty_array`` function (15/11/2023);
+- ``cast_to_ndim`` was renamed as ``cast`` (15/11/2023);
+
+#### Module data_frames
+- ``column_name`` function (15/11/2023);
+- ``is_empty`` function (15/11/2023);
+
+#### Module parameters
+- ``param_options`` function (14/11/2023);
+
+#### Module numbers
+- ``is_positive`` function (14/11/2023);
+- ``is_negative`` function (14/11/2023);
+- ``is_float_or_int`` function (14/11/2023);
+- ``is_lower_than`` function (14/11/2023);
+- ``is_greater_than`` function (14/11/2023);
+- ``is_between_a_and_b`` function (14/11/2023);
+
+### Fix
+
+#### Module numbers
+- Fixed bug in ``is_greater_than`` function (14/11/2023);
+
+
 ## v 1.0.0 (01/11/2023)
 
 
