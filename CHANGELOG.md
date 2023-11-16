@@ -6,6 +6,7 @@
 ### Updates
 
 #### Module types 
+- ``lis_of_types`` function (15/11/2023);
 - ``is_int`` function (15/11/2023);
 - ``is_float`` function (15/11/2023);
 - ``is_tuple`` function (15/11/2023);
