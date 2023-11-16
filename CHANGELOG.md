@@ -6,6 +6,7 @@
 ### Updates
 
 #### Module types 
+- ``is_str`` function (15/11/2023);
 - ``is_numpy`` function (15/11/2023);
 - ``is_list`` function (15/11/2023);
 - ``lis_of_types`` function (15/11/2023);
