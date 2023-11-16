@@ -923,7 +923,6 @@ def is_subplots(value, param_name, kind, kind_name, stacklevel=4, error=True):
         error=False,
     )
     UserWarning at line 4: The parameter `axes` in function `plot` must be of type `matplotlib.axes.SubplotBase`, but its type is `Figure`.
-    >>> plt.close()
     """
     if isinstance(value, SubplotBase) is False:
         user_warning(
