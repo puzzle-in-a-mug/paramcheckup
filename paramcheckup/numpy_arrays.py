@@ -484,7 +484,7 @@ def matching_size(
         stacklevel=3,
         error=False,
     )
-    UserWarning at line 6: The arrays `x_data` and ``y_data` and `z_data` in function `Tukey` must have the same size, but at least one of them has a different
+    UserWarning at line 6: The arrays `x_data` and `y_data` and `z_data` in function `Tukey` must have the same size, but at least one of them has a different
     size than the others.
     -->  x_data = 6
     -->  y_data = 5
@@ -496,9 +496,9 @@ def matching_size(
     for i in range(len(arrays)):
         sizes.append(arrays[i].size)
         if i == len(arrays) - 1:
-            names += param_names[i] + "`"
+            names += "`" + param_names[i] + "`"
         else:
-            names += "`" + param_names[i] + "` and `"
+            names += "`" + param_names[i] + "` and "
 
     if len(set(sizes)) != 1:
         user_warning(
