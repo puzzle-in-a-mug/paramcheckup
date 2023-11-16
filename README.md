@@ -152,11 +152,15 @@ def t_test(x_data, mu, alpha):
 x = np.array([1.24, 1.3, 1.11])
 alpha = 1.05
 result = t_test(x, 3, alpha)
-UserWarning at line 39: The value of `alpha` in function `t_test` must be within the range of `0 < number < 1`, but it is `1.05`.
+UserWarning at line 39: The value of `alpha` in function `t_test` must be within the range of `0 < alpha < 1`, but it is `1.05`.
 ```
 
 
-> Note that the ``inclusive=False`` parameter causes the limits to be open, which makes sense for the significance level.
+> Note that the ``inclusive=False`` parameter causes the limits to be open, which makes sense for the significance level. If ``inclusive=True``, we would have obtained the following error:
+
+```python
+UserWarning at line 39: The value of `alpha` in function `t_test` must be within the range of `0 <= alpha <= 1`, but it is `1.05`.
+```
 
 > Note that ``alpha`` must be of numeric type. This could be checked using function ``paramcheckup.numbers.is_float_or_int()`` ***before*** checking whether the parameter is within a numerical range.
 
