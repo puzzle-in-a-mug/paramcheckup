@@ -6,6 +6,7 @@
 ### Updates
 
 #### Module types 
+- ``is_tuple`` function (15/11/2023);
 - ``is_subplots`` function (15/11/2023);
 - ``is_str`` function (15/11/2023);
 - ``is_numpy`` function (15/11/2023);
