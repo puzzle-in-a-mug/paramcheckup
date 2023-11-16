@@ -2,17 +2,17 @@
 ##### List of functions (alphabetical order) #####
 
 ## Functions WITH TESTS ###
-- is_bool(value, param_name, func_name)
-- is_data_frame(data_frame, param_name, func_name)
-- is_dict(value, param_name, func_name)
-- is_float(value, param_name, func_name)
-- is_int(value, param_name, func_name)
-- is_list_of_types(my_list, param_name, func_name, expected_type)
-- is_list(value, param_name, func_name)
-- is_numpy(value, param_name, func_name)
-- is_str(value, param_name, func_name)
-- is_subplots(value, param_name, func_name)
-
+- is_bool(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_data_frame(data_frame, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_dict(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_float(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_int(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_list_of_types(my_list, expected_type, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_list(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_numpy(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_str(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_subplots(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_tuple(value, param_name, kind, kind_name, stacklevel=4, error=True)
 
 ## Functions WITH some TESTS (needs improvements) ###
 
