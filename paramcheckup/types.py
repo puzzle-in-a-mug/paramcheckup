@@ -510,7 +510,7 @@ def is_int(value, param_name, kind, kind_name, stacklevel=4, error=True):
     error_desc=docs.ERROR["description"],
 )
 def is_list_of_types(
-    my_list, param_name, expected_type, kind, kind_name, stacklevel=4, error=True
+    my_list, expected_type, param_name, kind, kind_name, stacklevel=4, error=True
 ):
     """This function checks whether all elements in the `list` `my_list` have the expected type of `expected_type`;
 
@@ -519,10 +519,10 @@ def is_list_of_types(
     ----------
     my_list :  list
         The `list` that the values are tested as being of `expected_type` type;
-    {param_name}
-        {param_name_desc} `my_list`;
     expected_type : any
         The type that each element of the `list` `my_list` should be;
+    {param_name}
+        {param_name_desc} `my_list`;
     {kind}
         {kind_desc}
     {kind_name}
@@ -545,8 +545,8 @@ def is_list_of_types(
     >>> from paramcheckup import types
     >>> result = types.is_list_of_types(
         my_list=["tukey", "dunnet", "fisher"],
-        param_name="comparison_test",
         expected_type=str,
+        param_name="comparison_test",
         kind="function",
         kind_name="ttest",
         stacklevel=3,
@@ -559,8 +559,8 @@ def is_list_of_types(
     >>> from paramcheckup import types
     >>> result = types.is_list_of_types(
         my_list=[0.05, 0.10, 0.15, 0.20, 1],
-        param_name="alphas",
         expected_type=float,
+        param_name="alphas",
         kind="function",
         kind_name="ttest",
         stacklevel=3,
