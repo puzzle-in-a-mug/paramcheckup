@@ -497,60 +497,103 @@ def is_int(value, param_name, kind, kind_name, stacklevel=4, error=True):
     return True
 
 
-def is_list_of_types(my_list, param_name, func_name, expected_type):
-    """ "This function checks whether all elements in the *list*  *my_list* have the expected type of *expected_type*."
+@docs.docstring_parameter(
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_list_of_types(
+    my_list, param_name, expected_type, kind, kind_name, stacklevel=4, error=True
+):
+    """This function checks whether all elements in the `list` `my_list` have the expected type of `expected_type`;
+
 
     Parameters
     ----------
     my_list :  list
-        The *list* that the values are tested as being of *expected_type* type;
-    param_name : str
-        The name of the parameter that received the variable *my_list*;
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+        The `list` that the values are tested as being of `expected_type` type;
+    {param_name}
+        {param_name_desc} `my_list`;
     expected_type : any
-        The type that each element of the *list* *my_list* must possess.
+        The type that each element of the `list` `my_list` should be;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
 
 
     Returns
     -------
-    True
-        If all elements in  *my_list* are of the type *expected_type*;
-    TypeError
-        If at least one elements in *my_list* **IS NOT** of type *expected_type*;
+    output : True
+        If all elements in `my_list` are of the type `expected_type`;
+    raises : TypeError
+        If at least one element in `my_list` **IS NOT** of type `expected_type`;
 
     Examples
     --------
     >>> from paramcheckup import types
-    >>> x_exp = [1, 2, 3, 4, 5]
-    >>> expected_type = int
-    >>> print(types.is_list_of_types(x_exp, "x_data", "tcalc", expected_type))
+    >>> result = types.is_list_of_types(
+        my_list=["tukey", "dunnet", "fisher"],
+        param_name="comparison_test",
+        expected_type=str,
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
     True
 
 
     >>> from paramcheckup import types
-    >>> x_exp = [1, 2.0, 3, 4, 5]
-    >>> expected_type = int
-    >>> types.is_list_of_types(x_exp, "x_data", "tcalc", expected_type)
-    At least one element in parameter 'x_data' of the 'tcalc' function is not of type *int*.
-    The following elements are not of type *int*:
-    -  2.0 is *float*
+    >>> result = types.is_list_of_types(
+        my_list=[0.05, 0.10, 0.15, 0.20, 1],
+        param_name="alphas",
+        expected_type=float,
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 4: At least one element of `alphas` in function `ttest` is not of type `float`.
+    -  0.05 is `float`
+    -  0.1 is `float`
+    -  0.15 is `float`
+    -  0.2 is `float`
+    -  1 is `int` <------
+
 
     """
     if all(isinstance(item, expected_type) for item in my_list) is False:
-        try:
-            error_type = expected_type.__name__.capitalize()
-            raise TypeError(f"Not{error_type}Error")
-        except TypeError:
-            print(
-                f"At least one element in parameter '{param_name}' of the '{func_name}' function is not of type *{expected_type.__name__}*."
-            )
-            print(f"The following elements are not of type *{expected_type.__name__}*:")
-            for element in my_list:
-                if not isinstance(element, expected_type):
-                    print("- ", element, "is", f"*{type(element).__name__}*")
-            print("\n")
-            raise
+        error_type = expected_type.__name__.capitalize()
+        user_warning(
+            f"At least one element of `{param_name}` in {kind} `{kind_name}` is not of type `{expected_type.__name__}`.",
+            stacklevel=stacklevel,
+        )
+        for element in my_list:
+            if not isinstance(element, expected_type):
+                print("- ", element, "is", f"`{type(element).__name__}` <------")
+            else:
+                print("- ", element, "is", f"`{type(element).__name__}`")
+        print("\n")
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError(f"Not{error_type}Error")
+            except TypeError:
+                raise
     return True
 
 
