@@ -2,11 +2,7 @@
 
 --------------------------------------------------------------------------------
 Command to run at the prompt:
-
     python -m unittest -v tests/types/test_is_list.py
-    or
-    python -m unittest -b tests/types/test_is_list.py
-
 --------------------------------------------------------------------------------
 """
 
@@ -20,73 +16,110 @@ import numpy as np
 from paramcheckup.types import is_list
 
 
-os.system('cls')
-
+os.system("cls")
 
 
 class Test_is_list(unittest.TestCase):
-
-
     @classmethod
     def setUpClass(cls):
-        pass
+        cls.value = ["0", "3/8", "1/2"]
+        cls.param_name = "cte_alpha"
+        cls.kind = "function"
+        cls.kind_name = "critical_value"
+        cls.stacklevel = 3
+        cls.error = True
+
+        cls.values = [[[1, 2, 3]], [1, 2, 3], [1]]
+
+        cls.raises = [
+            "anderson",
+            1.1,
+            np.float64(1),
+            np.float16(1),
+            1,
+            (1,),
+            (1, 1, 1),
+            (1, (1,), 1),
+            None,
+            {"a": 1},
+            set([1, 2, 3]),
+        ]
 
     def test_outputs(self):
-        output = is_list([1], "parametro", "func_name")
+        output = is_list(
+            self.value,
+            self.param_name,
+            self.kind,
+            self.kind_name,
+            self.stacklevel,
+            self.error,
+        )
         self.assertTrue(output, msg="not True when must be True")
-        output = is_list(value=[0], param_name="parametro", func_name="func_name")
-        self.assertTrue(output, msg="not True when must be True")        
 
-   
+        output = is_list(
+            value=self.value,
+            param_name=self.param_name,
+            kind=self.kind,
+            kind_name=self.kind_name,
+            stacklevel=self.stacklevel,
+            error=self.error,
+        )
+        self.assertTrue(output, msg="not True when must be True")
 
-    def test_string(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_list("a", param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a string"):
-            is_list("auisdhsa9d8ysadasd9oasdasdonha nsad\n", param_name="param", func_name="func_name")
+    def test_raises(self):
+        for value in self.raises:
+            with self.assertRaises(
+                TypeError,
+                msg=f"Does not raised error when value is a {type(value).__name__}",
+            ):
+                output = is_list(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=self.error,
+                )
 
-    def test_float(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_list(1.1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_list(1.1012, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_list(1.0, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_list(np.float32(1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is float"):
-            is_list(np.float64(1), param_name="param", func_name="func_name")
-
-    def test_int(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_list(1, param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a list"):
-            is_list(np.int64(1), param_name="param", func_name="func_name")
-
-    def test_tuple(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_list((1,), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_list((1,1,1), param_name="param", func_name="func_name")
-        with self.assertRaises(TypeError, msg="Does not raised error when value is a tuple"):
-            is_list((1, (1,), 1), param_name="param", func_name="func_name")
-
-    def test_empty(self):
-        with self.assertRaises(TypeError, msg="Does not raised error when no value was passed"):
-            is_list(param_name="param", func_name="func_name")
+    def test_raises_error_false(self):
+        for value in self.raises:
+            with self.assertRaises(
+                SystemExit,
+                msg=f"Does not raised SystemExit when value is a {type(value).__name__}",
+            ):
+                output = is_list(
+                    value=value,
+                    param_name=self.param_name,
+                    kind=self.kind,
+                    kind_name=self.kind_name,
+                    stacklevel=self.stacklevel,
+                    error=False,
+                )
 
     def test_pass(self):
-        result = is_list([1], param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was [1]")
+        for value in self.values:
+            output = is_list(
+                value=value,
+                param_name=self.param_name,
+                kind=self.kind,
+                kind_name=self.kind_name,
+                stacklevel=self.stacklevel,
+                error=self.error,
+            )
+        self.assertTrue(output, msg="not True when must be True")
 
-        result = is_list([1, 2, 3], param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was [1, 2, 3]")
-
-        result = is_list([[1,2,3]], param_name="param", func_name="func_name")
-        self.assertTrue(result, msg = "An error was raised when value was [[1,2,3]]")   
-
-
+    def test_pass_error_false(self):
+        for value in self.values:
+            output = is_list(
+                value=value,
+                param_name=self.param_name,
+                kind=self.kind,
+                kind_name=self.kind_name,
+                stacklevel=self.stacklevel,
+                error=False,
+            )
+        self.assertTrue(output, msg="not True when must be True")
 
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()
