@@ -762,54 +762,93 @@ def is_numpy(value, param_name, kind, kind_name, stacklevel=4, error=True):
             sys.exit(1)
         else:
             try:
-                raise TypeError("NotListError")
+                raise TypeError("NotNumPyError")
             except TypeError:
                 raise
     return True
 
 
-def is_str(value, param_name, func_name):
-    """This function checks whether a variable *value* is of the *str* type.
+@docs.docstring_parameter(
+    value=docs.VALUE["type"],
+    value_desc=docs.VALUE["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
+def is_str(value, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable `value` is of the `str` type.
+
 
     Parameters
     ----------
-    value : any type
-        The variable that is tested as being of *str* type;
-    param_name : str
-        The name of the parameter that received the variable *value*';
-    func_name : str
-        The name of the function that utilizes the parameter *param_name*;
+    {value}
+        {value_desc} `str` ;
+    {param_name}
+        {param_name_desc} `value`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
 
     Returns
     -------
-    True
-        If variable *value* **IS** of the *str* type;
-    TypeError
-        If variable *value* is **NOT** of the *str* type;
+    output : True
+        If variable `value` **IS** of the `str` type;
+    raises : TypeError
+        If variable `value` is **NOT** of the `str` type;
 
 
     Examples
     --------
     >>> from paramcheckup import types
-    >>> my_str = "hello darkness my old friend..."
-    >>> print(types.is_str(my_str, "param", "my_func"))
+    >>> output = types.is_str(
+        value="tukey",
+        param_name="test",
+        kind="function",
+        kind_name="comparison_test",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(output)
     True
 
 
     >>> from paramcheckup import types
-    >>> my_str = 0
-    >>> types.is_str(my_str, "param", "my_func")
-    The parameter 'param' in function 'my_func' must be of type *str*, but its type is *int*.
+    >>> output = types.is_str(
+        value=["tukey"],
+        param_name="test",
+        kind="function",
+        kind_name="comparison_test",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The parameter `test` in function `comparison_test` must be of type `str`, but its type is `list`.
 
     """
     if isinstance(value, str) is False:
-        try:
-            raise TypeError("NotStrError")
-        except TypeError:
-            print(
-                f"The parameter '{param_name}' in function '{func_name}' must be of type *str*, but its type is *{type(value).__name__}*.\n"
-            )
-            raise
+        user_warning(
+            f"The parameter `{param_name}` in {kind} `{kind_name}` must be of type `str`, but its type is `{type(value).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError("NotStrError")
+            except TypeError:
+                raise
     return True
 
 
