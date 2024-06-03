@@ -822,11 +822,11 @@ def is_set(value, param_name, kind, kind_name, stacklevel=4, error=True):
     Examples
     --------
     >>> from paramcheckup import types
-    >>> result = types.is_float(
-        value=0.05,
+    >>> result = types.is_set(
+        value=set(("A", "B", "C")),
         param_name="alpha",
         kind="function",
-        kind_name="ttest",
+        kind_name="func_name",
         stacklevel=3,
         error=True,
     )
@@ -835,15 +835,15 @@ def is_set(value, param_name, kind, kind_name, stacklevel=4, error=True):
 
 
     >>> from paramcheckup import types
-    >>> result = types.is_float(
-        value=5,
+    >>> result = types.is_set(
+        value=["A", "B", "C"],
         param_name="alpha",
         kind="function",
-        kind_name="ttest",
+        kind_name="func_name",
         stacklevel=3,
-        error=False,
+        error=True,
     )
-    UserWarning at line 2: The parameter `alpha` in function `ttest` must be of type `float`, but its type is `int`.
+    UserWarning at line 3: The parameter `alpha` in function `func_name` must be of type `set`, but its type is `list`.
 
     """
     if isinstance(value, set) is False:
