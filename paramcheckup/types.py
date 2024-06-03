@@ -782,6 +782,99 @@ def is_numpy(value, param_name, kind, kind_name, stacklevel=4, error=True):
     error=docs.ERROR["type"],
     error_desc=docs.ERROR["description"],
 )
+def is_set(value, param_name, kind, kind_name, stacklevel=4, error=True):
+    """This function checks whether a variable *value* is of the *set* type.
+
+
+    Parameters
+    ----------
+    {value}
+        {value_desc} `set`;
+    {param_name}
+        {param_name_desc} `value`;
+    {kind}
+        {kind_desc}
+    {kind_name}
+        {kind_name_desc}
+    {stacklevel}
+        {stacklevel_desc}
+    {error}
+        {error_desc}
+
+    Returns
+    -------
+    output : True
+        If variable `value` **IS** of the `set` type;
+    raises : TypeError
+        If variable `value` is **NOT** of the `set` type;
+
+
+
+    Notes
+    -----
+    The following types are considered to be `True`:
+
+    * `set`
+
+
+
+    Examples
+    --------
+    >>> from paramcheckup import types
+    >>> result = types.is_float(
+        value=0.05,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=True,
+    )
+    >>> print(result)
+    True
+
+
+    >>> from paramcheckup import types
+    >>> result = types.is_float(
+        value=5,
+        param_name="alpha",
+        kind="function",
+        kind_name="ttest",
+        stacklevel=3,
+        error=False,
+    )
+    UserWarning at line 2: The parameter `alpha` in function `ttest` must be of type `float`, but its type is `int`.
+
+    """
+    if isinstance(value, set) is False:
+        user_warning(
+            f"The parameter `{param_name}` in {kind} `{kind_name}` must be of type `set`, but its type is `{type(value).__name__}`.\n",
+            stacklevel=stacklevel,
+        )
+        if error is False:
+            sys.exit(1)
+        else:
+            try:
+                raise TypeError("NotSetError")
+            except TypeError:
+                raise
+    else:
+        return True
+
+
+@docs.docstring_parameter(
+    value=docs.VALUE["type"],
+    value_desc=docs.VALUE["description"],
+    param_name=docs.PARAM_NAME["type"],
+    param_name_desc=docs.PARAM_NAME["description"],
+    kind=docs.KIND["type"],
+    kind_desc=docs.KIND["description"],
+    kind_name=docs.KIND_NAME["type"],
+    kind_name_desc=docs.KIND_NAME["description"],
+    stacklevel=docs.STACKLEVEL["type"],
+    stacklevel_desc=docs.STACKLEVEL["description"],
+    error=docs.ERROR["type"],
+    error_desc=docs.ERROR["description"],
+)
 def is_str(value, param_name, kind, kind_name, stacklevel=4, error=True):
     """This function checks whether a variable `value` is of the `str` type.
 
