@@ -10,6 +10,7 @@
 - is_list_of_types(my_list, expected_type, param_name, kind, kind_name, stacklevel=4, error=True)
 - is_list(value, param_name, kind, kind_name, stacklevel=4, error=True)
 - is_numpy(value, param_name, kind, kind_name, stacklevel=4, error=True)
+- is_set(value, param_name, kind, kind_name, stacklevel=4, error=True)
 - is_str(value, param_name, kind, kind_name, stacklevel=4, error=True)
 - is_subplots(value, param_name, kind, kind_name, stacklevel=4, error=True)
 - is_tuple(value, param_name, kind, kind_name, stacklevel=4, error=True)
