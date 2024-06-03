@@ -56,7 +56,9 @@ from . import documentation as docs
     error=docs.ERROR["type"],
     error_desc=docs.ERROR["description"],
 )
-def param_options(option, options, param_name, kind, kind_name, stacklevel, error):
+def param_options(
+    option, options, param_name, kind, kind_name, stacklevel=4, error=True
+):
     """This function checks whether a `option` is a valid `options` for `param_name`.
 
     Parameters
