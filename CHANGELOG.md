@@ -1,6 +1,19 @@
 # Changelog
 
 
+
+
+## v 1.0.2 (03/06/2024)
+
+### Updates
+
+#### Module types 
+- ``is_set`` function (03/06/2024);
+
+
+
+
+
 ## v 1.0.1 (14/11/2023)
 
 ### Updates

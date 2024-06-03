@@ -16,6 +16,7 @@ types
    is_list_of_types   
    is_list
    is_numpy
+   is_set
    is_str
    is_subplots
    is_tuple
