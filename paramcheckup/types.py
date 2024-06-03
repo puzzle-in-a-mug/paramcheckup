@@ -843,7 +843,7 @@ def is_set(value, param_name, kind, kind_name, stacklevel=4, error=True):
         stacklevel=3,
         error=True,
     )
-    UserWarning at line 3: The parameter `alpha` in function `func_name` must be of type `set`, but its type is `list`.
+    UserWarning at line 2: The parameter `alpha` in function `func_name` must be of type `set`, but its type is `list`.
 
     """
     if isinstance(value, set) is False:
