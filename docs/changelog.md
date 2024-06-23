@@ -2,7 +2,11 @@
 
 
 
-## v 1.0.2 (03/06/2024)
+## v 1.0.2 (23/06/2024)
+
+### Release
+
+Version 1.0.2 was released
 
 ### Updates
 
