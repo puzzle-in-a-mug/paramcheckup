@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paramcheckup"
-version = "1.0.2"
+version = "1.0.3"
 description = "Check whether the parameters received are correct"
 authors = [
     {name = "Anderson Marcos Dias Canteli", email = "andersonmdcanteli@gmail.com"},
@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.urls]
-Source = "https://github.com/anderson-canteli/paramcheckup"
+Source = "https://github.com/puzzle-in-a-mug/paramcheckup"
 Docs = "https://paramcheckup.readthedocs.io/en/latest/"
 
 [tool.setuptools.packages.find]
