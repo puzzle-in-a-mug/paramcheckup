@@ -1,6 +1,8 @@
 # Changelog
 
+## v 1.0.3 (23/07/2024)
 
+Improved readme.md
 
 ## v 1.0.2 (23/06/2024)
 
