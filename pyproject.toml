@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.urls]
-Source = "https://github.com/anderson-canteli/paramcheckup"
+Source = "https://github.com/puzzle-in-a-mug/paramcheckup"
 Docs = "https://paramcheckup.readthedocs.io/en/latest/"
 
 [tool.setuptools.packages.find]
